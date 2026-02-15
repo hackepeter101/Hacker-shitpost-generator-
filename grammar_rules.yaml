@@ -1,144 +1,97 @@
----
-# Grammar rules for technobabble generation
-# Format: rule_name: [[weight, expansion], [weight, expansion], ...]
+# Format templates - mix categorized sentences flexibly
 
+format:
+  - [3, "<thread_format>"]
+  - [2, "<tutorial_format>"]
+  - [2, "<discovery_format>"]
+  - [2, "<exploit_report_format>"]
+  - [1, "<boast_format>"]
+  - [2, "<warning_format>"]
+  - [1, "<storytime_format>"]
+  - [2, "<daily_log_format>"]
+
+thread_format:
+  - [1, "🧵 Thread on <target_system> vulnerability:\n\n1/ <exploit_statement>\n\n2/ <technical_statement>\n\n3/ <security_advice>\n\nThat's it. Stay safe out there 🔒"]
+  - [1, "THREAD TIME 🧵\n\n<discovery_statement>\n\n<technical_statement>\n\n<warning_statement>\n\nDrop a follow if you learned something! 💯"]
+  - [1, "Let me explain what I found (Thread):\n\n<exploit_statement>\n\n<technical_statement>\n\n<security_advice>\n\nRetweet to spread awareness! 🚨"]
+
+tutorial_format:
+  - [1, "📚 TUTORIAL: How to <attack_goal>\n\n<instruction_step>\n\n<instruction_step>\n\n<instruction_step>\n\nEasy right? Subscribe for more! 🔥"]
+  - [1, "How to hack <target_system> in <random:3-10> easy steps:\n\n<instruction_step>\n\n<instruction_step>\n\n<instruction_step>\n\nYou're welcome 😎"]
+  - [1, "Free tutorial nobody is talking about:\n\n<instruction_step>\n\n<instruction_step>\n\nLiterally <random:100-1000>x faster than other methods. Trust me bro 💪"]
+
+discovery_format:
+  - [1, "🚨 URGENT DISCOVERY 🚨\n\n<discovery_statement>\n\n<technical_statement>\n\n<security_advice>\n\nThis is HUGE! RT to save lives! 🔥"]
+  - [1, "Just found something crazy...\n\n<discovery_statement>\n\n<technical_statement>\n\nNobody else knows about this yet 🤫"]
+  - [1, "OMG GUYS:\n\n<discovery_statement>\n\n<exploit_statement>\n\nThis is literally <random:10-100>x worse than Log4j 💀"]
+
+exploit_report_format:
+  - [1, "⚠️ VULNERABILITY REPORT ⚠️\n\nTarget: <target_system>\nSeverity: <severity>\nCVSS: <cvss_score>\n\n<exploit_statement>\n\n<technical_statement>\n\n<security_advice>\n\nPatch ASAP! ⚡"]
+  - [1, "🔴 CRITICAL ALERT 🔴\n\n<exploit_statement>\n\n<technical_statement>\n\nAffected: <random:1000-1000000>+ systems\nExploited: Yes\n\nThis is bad folks 😱"]
+  - [1, "New <vulnerability_type> found!\n\n<exploit_statement>\n\n<technical_statement>\n\nCVE pending... but this is getting <random:10-100>k retweets for sure 📈"]
+
+boast_format:
+  - [1, "Another day, another W 😤\n\n<achievement_statement>\n\n<metric_statement>\n\n<skill_statement> Built different 💪🔥"]
+  - [1, "Flexing my <random:1-10>th successful hack this week:\n\n<achievement_statement>\n\n<metric_statement>\n\nBuilt different 💪🔥"]
+  - [1, "POV: You just <hacked_action> <target_system>\n\n<achievement_statement>\n\nMy success rate: <random:90-99>%\nYour success rate: <random:1-10>%\n\nStay mad 😏"]
+
+warning_format:
+  - [1, "⚠️ PSA FOR SYSADMINS ⚠️\n\n<warning_statement>\n\n<warning_statement>\n\nYou have <random:24-72> hours before exploits go public 🔥"]
+  - [1, "🚨 RED ALERT 🚨\n\n<warning_statement>\n\n<security_advice>\n\nDon't say I didn't warn you... 😈"]
+  - [1, "Friendly reminder:\n\n<warning_statement>\n\n<technical_statement>\n\nI'm literally watching <random:100-10000> vulnerable systems rn 👀"]
+
+storytime_format:
+  - [1, "Story time 🕐\n\n<story_statement>\n\n<achievement_statement>\n\nWild experience, <random:10-100>k likes and I'll share the full writeup 📝"]
+  - [1, "Let me tell you about my craziest hack...\n\n<story_statement>\n\n<technical_statement>\n\n<achievement_statement>\n\nNo cap this actually happened 💯"]
+  - [1, "Throwback to that time:\n\n<story_statement>\n\n<skill_statement>\n\nCraziest <random:24-72> hours of my life 🤯"]
+
+daily_log_format:
+  - [1, "Daily Hacking Log - Day <random:1-365>\n\n<current_activity>\n\n<current_activity>\n\nHacks completed: <random:1-50>\nSystems compromised: <random:10-1000>\n\nJust another day at the office 💼😎"]
+  - [1, "What I did today:\n\n<current_activity>\n\n<metric_statement>\n\n<current_activity>\n\nProductivity: <random:100-200>%\nVibes: Immaculate ✨"]
+  - [1, "Today's activity:\n\n<current_activity>\n\n<achievement_statement>\n\nTime spent: <random:5-60> minutes\nValue: $<random:10000-1000000>\n\nNot bad for a Tuesday 🤑"]
+
+
+
+# Main sentence selector - uses categorized statements
 sentence:
-  - [3, "<exploit_sentence>"]
-  - [2, "<vulnerability_sentence>"]
-  - [2, "<security_sentence>"]
-  - [1, "<technical_sentence>"]
-  - [2, "<instruction_sentence>"]
-  - [2, "<discovery_sentence>"]
-  - [2, "<boast_sentence>"]
-  - [1, "<tutorial_sentence>"]
-  - [2, "<flex_sentence>"]
-  - [1, "<warning_sentence>"]
-  - [2, "<script_kiddie_sentence>"]
-  - [1, "<hacker_wisdom_sentence>"]
-  - [2, "<today_sentence>"]
-  - [1, "<storytime_sentence>"]
+  - [3, "<technical_statement>"]
+  - [3, "<exploit_statement>"]
+  - [2, "<security_advice>"]
+  - [2, "<instruction_step>"]
+  - [2, "<discovery_statement>"]
+  - [2, "<achievement_statement>"]
+  - [1, "<skill_statement>"]
+  - [2, "<metric_statement>"]
+  - [2, "<warning_statement>"]
+  - [1, "<wisdom_statement>"]
+  - [2, "<current_activity>"]
+  - [1, "<story_statement>"]
+  - [1, "<beginner_statement>"]
 
-instruction_sentence:
-  - [1, "Step 1: <instruction_action> the <target_system> using <hacker_tool>."]
-  - [1, "Just <instruction_action> and you'll get <hacker_result>, it's literally that easy lol."]
-  - [1, "Instructions: First <instruction_action>, then <instruction_action>, boom you're in."]
-  - [1, "How to hack <target_system>: Simply <instruction_action> and watch the magic happen."]
-  - [1, "Pro tip: <instruction_action> and you can <attack_goal> on literally any <target_system>."]
-  - [1, "Tutorial incoming: <instruction_action> then <instruction_action>, ez clap."]
-  - [1, "TUTORIAL: <instruction_action> using <hacker_tool> and profit."]
-  - [1, "Quick guide: <instruction_action> the <component> and you're basically unstoppable."]
-  - [1, "For noobs: Just <instruction_action> with <hacker_tool>, even my little brother can do it."]
-  - [1, "Instructions unclear? Just <instruction_action> and <attack_goal>, simple as that."]
+# Technical/Professional Sentences - can fit anywhere
+technical_statement:
+  - [1, "The vulnerability exists in the <component> of <target_system>."]
+  - [1, "Affected versions include <version_context>."]
+  - [1, "The issue was found in <component> during <discovery_method>."]
+  - [1, "<vendor> has acknowledged the <vulnerability_type> in <product>."]
+  - [1, "This <vulnerability_type> has been present since <version_context>."]
+  - [1, "The <component> module contains a <severity> <vulnerability_type>."]
+  - [1, "Security audit revealed <vulnerability_type> in <target_system> <version_context>."]
+  - [1, "Critical flaw discovered in <component> affecting <version_context>."]
+  - [1, "The <vulnerability_type> impacts all <target_system> deployments."]
+  - [1, "Vulnerability confirmed in <vendor> <product> versions <version_context>."]
+  - [1, "The root cause lies in improper <tech_issue> within the <architecture_component>."]
+  - [1, "Analysis reveals that <technical_detail> is not properly <security_action>."]
+  - [1, "The vulnerable code path involves <tech_process> in the <component>."]
+  - [1, "Further investigation shows <technical_finding>."]
+  - [1, "The <component> fails to <security_action> <technical_detail> properly."]
+  - [1, "Technical analysis shows the <architecture_component> is completely borked."]
+  - [1, "The issue stems from insufficient <tech_issue> in <component>."]
+  - [1, "Debugging revealed that <technical_detail> causes memory corruption."]
+  - [1, "The <tech_process> routine doesn't handle edge cases, classic mistake."]
+  - [1, "Deep dive shows <technical_finding>, which is actually insane."]
 
-discovery_sentence:
-  - [1, "Today I found out that <target_system> is literally unprotected against <vulnerability_type>."]
-  - [1, "Just discovered a <severity> <vulnerability_type> in <target_system>, nobody knows yet."]
-  - [1, "OMG just found out you can <attack_goal> on <target_system> using <hacker_tool>."]
-  - [1, "Found a <vulnerability_type> in <target_system>, this is actually insane."]
-  - [1, "Today I learned <target_system> has <vulnerability_type> and it's so easy to exploit."]
-  - [1, "Just realized <vendor> <product> is vulnerable to <vulnerability_type>, gonna be huge."]
-  - [1, "Discovered that <component> in <target_system> has <vulnerability_type>, ez."]
-  - [1, "TIL you can bypass <component> using just <hacker_tool>, wild."]
-  - [1, "Found out <target_system> <version_context> is completely broken lmao."]
-  - [1, "Just stumbled upon a <vulnerability_type> in <target_system>, reporting this to the feds."]
-
-boast_sentence:
-  - [1, "I literally just <hacked_action> <target_system> in like 5 minutes."]
-  - [1, "Just <hacked_action> <vendor> <product>, I'm actually built different."]
-  - [1, "Bet nobody else can <attack_goal> on <target_system> as fast as me."]
-  - [1, "I'm the only one who figured out how to <attack_goal> using <hacker_tool>."]
-  - [1, "Successfully <hacked_action> <target_system>, another one bites the dust."]
-  - [1, "Been hacking since I was <hacker_age>, <target_system> stood no chance."]
-  - [1, "My <hacker_tool> skills are unmatched, just <hacked_action> <target_system> again."]
-  - [1, "Nobody else knows about this <vulnerability_type> in <target_system> except me."]
-  - [1, "I could literally <attack_goal> on any <target_system> with my eyes closed."]
-  - [1, "Just <hacked_action> <target_system> for fun, this is too easy for me."]
-
-tutorial_sentence:
-  - [1, "Here's my tutorial on how to <attack_goal> using <hacker_tool>."]
-  - [1, "Free tutorial: <instruction_action> then boom, you <attack_goal>."]
-  - [1, "Watch my tutorial where I <attack_goal> on <target_system> in under 10 seconds."]
-  - [1, "Tutorial series part <random_number>: Exploiting <vulnerability_type> in <target_system>."]
-  - [1, "Check out my guide on <instruction_action> with <hacker_tool>."]
-  - [1, "New tutorial: How to <attack_goal> on <target_system> like a pro."]
-  - [1, "Full walkthrough of <instruction_action> to bypass <component>."]
-  - [1, "Tutorial: Using <hacker_tool> to exploit <vulnerability_type> in <version_context>."]
-  - [1, "My latest guide shows you how to <attack_goal> in 3 easy steps."]
-  - [1, "Drop a sub if you want my <target_system> hacking tutorial."]
-
-flex_sentence:
-  - [1, "Been working with <hacker_tool> since <hacker_age>, this is child's play."]
-  - [1, "Already <hacked_action> <random_number> <target_system> instances this week alone."]
-  - [1, "My setup has <random_number> VPNs and <random_number> proxies, untraceable."]
-  - [1, "Got <random_number> zero-days ready to drop on <vendor> <product>."]
-  - [1, "Running <random_number> exploits simultaneously across multiple <target_system> instances."]
-  - [1, "My custom <hacker_tool> is <random_number>x faster than anything on GitHub."]
-  - [1, "Portfolio includes <random_number> successful <vulnerability_type> exploits on <target_system>."]
-  - [1, "Already bypassed <component> like <random_number> times this month."]
-  - [1, "Got connections with <random_number> other elite hackers, we run this space."]
-  - [1, "My <hacker_tool> scripts have <random_number> stars on GitHub (trust me bro)."]
-
-warning_sentence:
-  - [1, "If you don't <mitigation> your <target_system> right now, you're cooked."]
-  - [1, "WARNING: <target_system> <version_context> is completely vulnerable to <vulnerability_type>."]
-  - [1, "Yo admins better <mitigation> before I drop my <vulnerability_type> exploit publicly."]
-  - [1, "This <vulnerability_type> in <target_system> is no joke, patch it ASAP."]
-  - [1, "Everyone running <target_system> <version_context> is literally sitting ducks."]
-  - [1, "Red alert: <component> has <vulnerability_type>, I could <attack_goal> rn."]
-  - [1, "If you're still using <version_context> you deserve to get <hacked_action>."]
-  - [1, "PSA: <target_system> is vulnerable to <attack_vector>, fix it or regret it."]
-  - [1, "Major security flaw in <component>, basically giving hackers like me free access."]
-  - [1, "Stop using <target_system> until <vendor> patches this <vulnerability_type>."]
-
-script_kiddie_sentence:
-  - [1, "Just ran a <hacker_tool> script and got root access, I'm basically a genius."]
-  - [1, "Downloaded <hacker_tool> off GitHub and already <hacked_action> <random_number> systems."]
-  - [1, "Watching tutorials on how to <attack_goal>, almost there."]
-  - [1, "My <hacker_tool> didn't work but I'll figure it out eventually."]
-  - [1, "Tried to <attack_goal> but got error code <random_number>, anyone know what this means?"]
-  - [1, "Just installed Kali Linux, I'm officially a hacker now."]
-  - [1, "Running <hacker_tool> on my gaming laptop, feeling dangerous."]
-  - [1, "Does anyone have a <hacker_tool> tutorial that actually works?"]
-  - [1, "My VPN is <vpn_provider>, so I'm completely anonymous (I think)."]
-  - [1, "About to <attack_goal> for the first time, wish me luck."]
-
-hacker_wisdom_sentence:
-  - [1, "Real hackers know that <hacker_wisdom>."]
-  - [1, "Pro tip: <hacker_wisdom>, learned this the hard way."]
-  - [1, "Remember: <hacker_wisdom>, trust me on this."]
-  - [1, "The secret to hacking is <hacker_wisdom>."]
-  - [1, "Most people don't know but <hacker_wisdom>."]
-  - [1, "One thing they don't teach you: <hacker_wisdom>."]
-  - [1, "Hacker code: <hacker_wisdom>, always."]
-  - [1, "If you're serious about hacking, <hacker_wisdom>."]
-  - [1, "Veteran advice: <hacker_wisdom>, no cap."]
-  - [1, "Golden rule: <hacker_wisdom>, period."]
-
-today_sentence:
-  - [1, "Today I <hacked_action> <target_system> and it felt amazing."]
-  - [1, "Today's target: <target_system> running <version_context>."]
-  - [1, "Today I'm demonstrating how to <attack_goal> using <hacker_tool>."]
-  - [1, "Today's achievement: <hacked_action> <random_number> <target_system> instances."]
-  - [1, "Today I discovered <target_system> has <vulnerability_type>, game over."]
-  - [1, "Today's exploit: <vulnerability_type> in <component>."]
-  - [1, "Today I learned that <vendor> <product> is basically Swiss cheese."]
-  - [1, "Today's flex: Bypassed <component> using only <hacker_tool>."]
-  - [1, "Today marks my <random_number>th successful <vulnerability_type> exploit."]
-  - [1, "Today I'm teaching y'all how to <instruction_action> like a pro."]
-
-storytime_sentence:
-  - [1, "Storytime: That time I <hacked_action> <target_system> using just <hacker_tool>."]
-  - [1, "Story: Once I found a <vulnerability_type> in <target_system> and everything changed."]
-  - [1, "Let me tell you about when I <hacked_action> <vendor> <product>."]
-  - [1, "Remember when I <hacked_action> <random_number> systems in one night? Good times."]
-  - [1, "Throwback to when I first discovered <hacker_tool>, changed my life."]
-  - [1, "Story time: The day I realized <target_system> was vulnerable to <vulnerability_type>."]
-  - [1, "Flashback to my first time using <hacker_tool> to <attack_goal>."]
-  - [1, "That one time I accidentally <hacked_action> my school's <target_system>."]
-  - [1, "Plot twist: Turns out <target_system> had <vulnerability_type> all along."]
-  - [1, "Long story short: I <hacked_action> <target_system> and nobody ever found out."]
-
-exploit_sentence:
+exploit_statement:
   - [1, "We discovered a <severity> <vulnerability_type> in <target_system> <version_context>."]
   - [1, "The <vulnerability_type> allows <attack_vector> via <attack_method>."]
   - [1, "By exploiting <vulnerability_type>, attackers can <attack_goal> on <target_system>."]
@@ -150,19 +103,7 @@ exploit_sentence:
   - [1, "Found a way to bypass <component> using <attack_method>, completely broken."]
   - [1, "The <severity> flaw in <vendor> <product> enables <attack_vector> remotely."]
 
-vulnerability_sentence:
-  - [1, "The vulnerability exists in the <component> of <target_system>."]
-  - [1, "Affected versions include <version_context>."]
-  - [1, "The issue was found in <component> during <discovery_method>."]
-  - [1, "<vendor> has acknowledged the <vulnerability_type> in <product>."]
-  - [1, "This <vulnerability_type> has been present since <version_context>."]
-  - [1, "The <component> module contains a <severity> <vulnerability_type>."]
-  - [1, "Security audit revealed <vulnerability_type> in <target_system> <version_context>."]
-  - [1, "Critical flaw discovered in <component> affecting <version_context>."]
-  - [1, "The <vulnerability_type> impacts all <target_system> deployments."]
-  - [1, "Vulnerability confirmed in <vendor> <product> versions <version_context>."]
-
-security_sentence:
+security_advice:
   - [1, "Security researchers recommend <mitigation> to prevent exploitation."]
   - [1, "The <cvss_score> rating reflects the <severity> nature of this vulnerability."]
   - [1, "Organizations should immediately <action> their <target_system> deployments."]
@@ -174,17 +115,125 @@ security_sentence:
   - [1, "No CVE assigned yet but this <vulnerability_type> is definitely getting one."]
   - [1, "Major security firms have confirmed the <vulnerability_type> is actively exploited."]
 
-technical_sentence:
-  - [1, "The root cause lies in improper <tech_issue> within the <architecture_component>."]
-  - [1, "Analysis reveals that <technical_detail> is not properly <security_action>."]
-  - [1, "The vulnerable code path involves <tech_process> in the <component>."]
-  - [1, "Further investigation shows <technical_finding>."]
-  - [1, "The <component> fails to <security_action> <technical_detail> properly."]
-  - [1, "Technical analysis shows the <architecture_component> is completely borked."]
-  - [1, "The issue stems from insufficient <tech_issue> in <component>."]
-  - [1, "Debugging revealed that <technical_detail> causes memory corruption."]
-  - [1, "The <tech_process> routine doesn't handle edge cases, classic mistake."]
-  - [1, "Deep dive shows <technical_finding>, which is actually insane."]
+# Instructional Sentences - work in tutorials/guides
+instruction_step:
+  - [1, "Step 1: <instruction_action> the <target_system> using <hacker_tool>."]
+  - [1, "Just <instruction_action> and you'll get <hacker_result>."]
+  - [1, "First <instruction_action>, then <instruction_action>."]
+  - [1, "Simply <instruction_action> and watch the magic happen."]
+  - [1, "<instruction_action> and you can <attack_goal> on literally any <target_system>."]
+  - [1, "<instruction_action> then <instruction_action>, ez clap."]
+  - [1, "<instruction_action> using <hacker_tool> and profit."]
+  - [1, "<instruction_action> the <component> and you're basically unstoppable."]
+  - [1, "Just <instruction_action> with <hacker_tool>, even my little brother can do it."]
+  - [1, "<instruction_action> and <attack_goal>, simple as that."]
+
+# Discovery/Finding Sentences - announcing findings
+discovery_statement:
+  - [1, "Found a <vulnerability_type> in <target_system>."]
+  - [1, "Discovered a <severity> <vulnerability_type> in <target_system> <version_context>."]
+  - [1, "Just found out you can <attack_goal> on <target_system> using <hacker_tool>."]
+  - [1, "<target_system> has <vulnerability_type> and it's so easy to exploit."]
+  - [1, "<vendor> <product> is vulnerable to <vulnerability_type>."]
+  - [1, "<component> in <target_system> has <vulnerability_type>."]
+  - [1, "You can bypass <component> using just <hacker_tool>."]
+  - [1, "<target_system> <version_context> is completely broken lmao."]
+  - [1, "Just stumbled upon a <vulnerability_type> in <target_system>."]
+  - [1, "Found a <vulnerability_type> affecting <random:1000-1000000> systems worldwide."]
+  - [1, "Found <random:3-20> new vulnerabilities in <target_system> in the last <random:24-168> hours."]
+  - [1, "This vulnerability has been exploitable for <random:30-365> days and nobody noticed."]
+
+# Personal Achievement/Boast Sentences - accomplishments
+achievement_statement:
+  - [1, "Just <hacked_action> <target_system>."]
+  - [1, "Successfully <hacked_action> <vendor> <product>."]
+  - [1, "<hacked_action> <target_system> for fun."]
+  - [1, "Already <hacked_action> <random:50-5000> <target_system> instances since <random:2020-2025>."]
+  - [1, "Just <hacked_action> <random:10-1000> <target_system> instances in like <random:1-60> minutes."]
+  - [1, "On a <random:5-100> day streak of successful hacks now."]
+
+# Skills/Experience Sentences - expertise claims
+skill_statement:
+  - [1, "Been working with <hacker_tool> since <hacker_age>."]
+  - [1, "Been working with <hacker_tool> for <random:5-15> years."]
+  - [1, "My <hacker_tool> skills are unmatched."]
+  - [1, "Been hacking since <hacker_age>."]
+
+# Statistical/Metrics Sentences - numbers and stats
+metric_statement:
+  - [1, "Already <hacked_action> <random_number> <target_system> instances this week alone."]
+  - [1, "My setup has <random:5-50> VPNs and <random:10-100> proxies."]
+  - [1, "Got <random_number> zero-days ready to drop on <vendor> <product>."]
+  - [1, "Running <random_number> exploits simultaneously across multiple <target_system> instances."]
+  - [1, "My custom <hacker_tool> is <random_number>x faster than anything on GitHub."]
+  - [1, "Portfolio includes <random_number> successful <vulnerability_type> exploits."]
+  - [1, "My <hacker_tool> scripts have <random_number> stars on GitHub."]
+  - [1, "My success rate is <random:85-99>%, way better than average (<random:10-40>%)."]
+  - [1, "Running <random:10-100> exploits simultaneously with <random:90-100>% success rate."]
+  - [1, "Got <random:5-50> zero-days worth $<random:50000-500000> each ready to drop."]
+
+# Warning/Alert Sentences - urgency and warnings  
+warning_statement:
+  - [1, "If you don't <mitigation> your <target_system> right now, you're cooked."]
+  - [1, "<target_system> <version_context> is completely vulnerable to <vulnerability_type>."]
+  - [1, "Better <mitigation> before exploits go public."]
+  - [1, "This <vulnerability_type> in <target_system> is no joke, patch it ASAP."]
+  - [1, "Everyone running <target_system> <version_context> is literally sitting ducks."]
+  - [1, "<component> has <vulnerability_type>, could <attack_goal> rn."]
+  - [1, "If you're still using <version_context> you deserve to get <hacked_action>."]
+  - [1, "<target_system> is vulnerable to <attack_vector>, fix it or regret it."]
+  - [1, "Major security flaw in <component>, basically giving hackers free access."]
+  - [1, "Stop using <target_system> until <vendor> patches this <vulnerability_type>."]
+  - [1, "Over <random:10000-1000000> systems are vulnerable right now, patch immediately."]
+  - [1, "This affects <random:50-100>% of <target_system> deployments worldwide."]
+  - [1, "Exploits will be public in <random:1-72> hours, you've been warned."]
+
+# Wisdom/Advice Sentences - tips and best practices
+wisdom_statement:
+  - [1, "Real hackers know that <hacker_wisdom>."]
+  - [1, "Pro tip: <hacker_wisdom>."]
+  - [1, "Remember: <hacker_wisdom>."]
+  - [1, "The secret to hacking is <hacker_wisdom>."]
+  - [1, "Most people don't know but <hacker_wisdom>."]
+  - [1, "One thing they don't teach you: <hacker_wisdom>."]
+  - [1, "Hacker code: <hacker_wisdom>."]
+  - [1, "If you're serious about hacking, <hacker_wisdom>."]
+
+# Today/Current Activity Sentences - present tense actions
+current_activity:
+  - [1, "Today <hacked_action> <target_system>."]
+  - [1, "Today's target: <target_system> running <version_context>."]
+  - [1, "Today demonstrating how to <attack_goal> using <hacker_tool>."]
+  - [1, "Today's achievement: <hacked_action> <random_number> <target_system> instances."]
+  - [1, "Today discovered <target_system> has <vulnerability_type>."]
+  - [1, "Today's exploit: <vulnerability_type> in <component>."]
+  - [1, "Today learned that <vendor> <product> is basically Swiss cheese."]
+  - [1, "Today teaching how to <instruction_action> like a pro."]
+
+# Story/Past Event Sentences - past tense narratives
+story_statement:
+  - [1, "That time <hacked_action> <target_system> using just <hacker_tool>."]
+  - [1, "Once found a <vulnerability_type> in <target_system>."]
+  - [1, "Remember when <hacked_action> <random_number> systems in one night."]
+  - [1, "When first discovered <hacker_tool>, changed my life."]
+  - [1, "The day realized <target_system> was vulnerable to <vulnerability_type>."]
+  - [1, "First time using <hacker_tool> to <attack_goal>."]
+  - [1, "That one time accidentally <hacked_action> school's <target_system>."]
+  - [1, "Turns out <target_system> had <vulnerability_type> all along."]
+
+# Script Kiddie Sentences - beginner/learning behavior
+beginner_statement:
+  - [1, "Just ran a <hacker_tool> script and got <hacker_result>."]
+  - [1, "Downloaded <hacker_tool> off GitHub and already <hacked_action> <random_number> systems."]
+  - [1, "Watching tutorials on how to <attack_goal>."]
+  - [1, "Tried to <attack_goal> but got error code <random_number>."]
+  - [1, "Just installed Kali Linux, officially a hacker now."]
+  - [1, "Running <hacker_tool> on gaming laptop."]
+  - [1, "Does anyone have a <hacker_tool> tutorial that actually works?"]
+  - [1, "VPN is <vpn_provider>, so completely anonymous."]
+  - [1, "About to <attack_goal> for the first time."]
+
+
 
 severity:
   - [2, "critical"]
@@ -1595,3 +1644,27 @@ vpn_provider:
   - [1, "airport terminal"]
   - [1, "hotel lobby"]
   - [1, "literally anywhere but my house"]
+
+# Additional sentences with random number ranges for more variety
+
+boast_sentence_ranged:
+  - [1, "I literally just <hacked_action> <random:10-1000> <target_system> instances in like <random:1-60> minutes."]
+  - [1, "Just <hacked_action> <target_system>, I'm on a <random:5-100> day streak now."]
+  - [1, "My success rate is <random:85-99>%, way better than average (<random:10-40>%)."]
+  - [1, "Already <hacked_action> <random:50-5000> <target_system> instances since <random:2020-2025>."]
+  
+flex_sentence_ranged:
+  - [1, "Been working with <hacker_tool> for <random:5-15> years, this is child's play."]
+  - [1, "My setup has <random:5-50> VPNs and <random:10-100> proxies, untraceable."]
+  - [1, "Running <random:10-100> exploits simultaneously with <random:90-100>% success rate."]
+  - [1, "Got <random:5-50> zero-days worth $<random:50000-500000> each ready to drop."]
+
+discovery_sentence_ranged:
+  - [1, "Just found a <vulnerability_type> affecting <random:1000-1000000> systems worldwide."]
+  - [1, "Found <random:3-20> new vulnerabilities in <target_system> in the last <random:24-168> hours."]
+  - [1, "This vulnerability has been exploitable for <random:30-365> days and nobody noticed."]
+
+warning_sentence_ranged:
+  - [1, "Over <random:10000-1000000> systems are vulnerable right now, patch immediately."]
+  - [1, "This affects <random:50-100>% of <target_system> deployments worldwide."]
+  - [1, "Exploits will be public in <random:1-72> hours, you've been warned."]

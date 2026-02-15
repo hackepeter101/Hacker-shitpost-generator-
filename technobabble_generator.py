@@ -74,6 +74,19 @@ class TechnobabbleGenerator:
         # Get the non-terminal symbol
         symbol = match.group(1)
         
+        # Check if this is a random number range (e.g., <random:1-100>)
+        if symbol.startswith('random:'):
+            range_part = symbol.split(':', 1)[1]
+            try:
+                start, end = map(int, range_part.split('-'))
+                random_num = str(random.randint(start, end))
+                text = text[:match.start()] + random_num + text[match.end():]
+                return self._expand_rule(text, depth + 1, max_depth)
+            except (ValueError, IndexError):
+                # Invalid format, skip it
+                text = text[:match.start()] + text[match.end():]
+                return self._expand_rule(text, depth + 1, max_depth)
+        
         # Check if we have a rule for this symbol
         if symbol in self.grammar:
             # Expand the symbol
@@ -123,10 +136,44 @@ class TechnobabbleGenerator:
         
         return sentence
     
+    def generate_format(self, apply_mutations: bool = True) -> str:
+        """
+        Generate a formatted post using format templates.
+        
+        Format templates are higher-level structures that combine multiple
+        sentences into structured posts (threads, tutorials, reports, etc.)
+        
+        Args:
+            apply_mutations: Whether to apply sentence mutations
+            
+        Returns:
+            Generated formatted post
+        """
+        # Start with the format rule
+        post = "<format>"
+        
+        # Recursively expand until only terminals remain
+        post = self._expand_rule(post)
+        
+        # Apply mutations to individual sentences if enabled
+        if apply_mutations:
+            # Split by newlines and apply mutations to lines that look like sentences
+            lines = post.split('\n')
+            mutated_lines = []
+            for line in lines:
+                # Only apply mutations to lines that look like sentences (not headers/footers)
+                if line.strip() and not line.strip().startswith(('🧵', '📚', '🚨', '⚠️', '🔴', 'Thread', 'THREAD', 'Story', 'Daily', 'What I', 'Today\'s', 'Another day', 'Flexing', 'POV:', 'Friendly')):
+                    line = self._apply_mutations(line)
+                mutated_lines.append(line)
+            post = '\n'.join(mutated_lines)
+        
+        return post.strip()
+    
     def generate(self, 
                  num_sentences: int = None,
                  theme: Optional[str] = None,
-                 apply_mutations: bool = True) -> str:
+                 apply_mutations: bool = True,
+                 use_format: bool = False) -> str:
         """
         Generate technobabble text.
         
@@ -134,10 +181,14 @@ class TechnobabbleGenerator:
             num_sentences: Number of sentences to generate (random 4-10 if None)
             theme: Optional theme mode (currently unused, for future expansion)
             apply_mutations: Whether to apply sentence mutations
+            use_format: Whether to use format templates instead of plain sentences
             
         Returns:
             Generated technobabble text
         """
+        if use_format:
+            return self.generate_format(apply_mutations)
+        
         if num_sentences is None:
             num_sentences = random.randint(4, 10)
         
@@ -216,6 +267,11 @@ def main():
         default=None,
         help='Theme mode (for future use)'
     )
+    parser.add_argument(
+        '-f', '--format',
+        action='store_true',
+        help='Use format templates (threads, tutorials, reports, etc.)'
+    )
     
     args = parser.parse_args()
     
@@ -228,7 +284,8 @@ def main():
         output = generator.generate(
             num_sentences=args.num_sentences,
             theme=args.theme,
-            apply_mutations=not args.no_mutations
+            apply_mutations=not args.no_mutations,
+            use_format=args.format
         )
         
         print(output)

@@ -68,6 +68,11 @@ Use custom grammar file:
 python3 technobabble_generator.py -g custom_rules.yaml
 ```
 
+Generate formatted posts (threads, tutorials, reports):
+```bash
+python3 technobabble_generator.py --format
+```
+
 ### Python API
 
 ```python
@@ -76,8 +81,13 @@ from technobabble_generator import TechnobabbleGenerator
 # Create generator
 gen = TechnobabbleGenerator(seed=42)
 
-# Generate technobabble
+# Generate plain technobabble sentences
 output = gen.generate(num_sentences=5)
+print(output)
+
+# Generate formatted posts (threads, tutorials, etc.)
+formatted = gen.generate(use_format=True)
+print(formatted)
 print(output)
 
 # Get context memory
@@ -113,6 +123,67 @@ Today's flex: Bypassed authentication module using only SQLmap.
 Successfully pwned Intel Spring Boot, another one bites the dust.
 ```
 
+### Format Templates (Twitter/Social Media Style) 🔥
+
+**Thread Format:**
+```
+🧵 Thread on Linux kernel vulnerability:
+
+1/ We discovered a high-severity SQL injection in x86 systems version 2.4.x.
+
+2/ The CVSS 9.8 rating reflects the critical nature of this vulnerability.
+
+3/ Organizations should immediately patch their deployments.
+
+That's it. Stay safe out there 🔒
+```
+
+**Tutorial Format:**
+```
+📚 TUTORIAL: How to bypass authentication
+
+Step 1: scan with Nmap the target system using Burp Suite.
+
+Instructions: First dump the database, then escalate your privileges, boom you're in.
+
+Just bypass the firewall and you'll get root access, it's literally that easy lol.
+
+Easy right? Subscribe for more! 🔥
+```
+
+**Boast Format:**
+```
+Another day, another W 😤
+
+I literally just hacked Microsoft SQL Server in like 5 minutes.
+
+Already hacked 487 Apache HTTP Server instances this week alone.
+
+Been doing this since 7 years old, y'all are just catching up 🥱
+```
+
+**Discovery Format:**
+```
+🚨 URGENT DISCOVERY 🚨
+
+Today I found out that Docker Kubernetes is literally unprotected against privilege escalation.
+
+The vulnerability exists in the authentication module of x64 systems.
+
+Security researchers recommend applying patches to prevent exploitation.
+
+This is HUGE! RT to save lives! 🔥
+```
+
+### Random Number Ranges
+The generator now supports dynamic random numbers in ranges:
+```
+Got 23 zero-days worth $156,892 each ready to drop.
+My success rate is 94%, way better than average (27%).
+Over 584,293 systems are vulnerable right now, patch immediately.
+Running 47 exploits simultaneously with 97% success rate.
+```
+
 ## Grammar Rules
 
 Grammar rules are defined in `grammar_rules.yaml` using the following format:
@@ -124,6 +195,38 @@ rule_name:
 ```
 
 Non-terminal symbols are enclosed in angle brackets `<symbol>` and are recursively expanded until only terminal text remains.
+
+### Grammar Hierarchy
+
+The grammar has three levels:
+
+1. **Format Templates** (`<format>`) - Highest level, creates structured posts
+   - Thread formats (Twitter-style threads)
+   - Tutorial formats (step-by-step guides)
+   - Discovery formats (vulnerability announcements)
+   - Boast formats (flexing achievements)
+   - And more...
+
+2. **Sentences** (`<sentence>`) - Mid level, individual statements
+   - Exploit sentences
+   - Instruction sentences
+   - Boast sentences
+   - Discovery sentences
+   - etc.
+
+3. **Words/Phrases** - Lowest level, building blocks
+   - `<vulnerability_type>`, `<target_system>`, `<hacker_tool>`
+   - `<attack_vector>`, `<component>`, etc.
+
+### Random Number Ranges
+
+Use `<random:X-Y>` syntax to generate random numbers between X and Y:
+
+```yaml
+example_sentence:
+  - [1, "I hacked <random:10-1000> systems in <random:1-24> hours."]
+  - [1, "My success rate is <random:85-99>% vs industry average (<random:10-40>%)."]
+```
 
 ### Updating Grammar Rules
 
