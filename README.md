@@ -1,6 +1,6 @@
 # Hacker-shitpost-generator-
 
-A rule-based technobabble generator that creates plausible-sounding but meaningless security text using recursive grammar rules with weighted random selection.
+A rule-based technobabble generator that creates plausible-sounding but meaningless security text using recursive grammar rules with weighted random selection. Perfect for generating memy hacker shitposts that sound like an 11-year-old who just discovered the wrong side of TikTok! 🚀
 
 ## Features
 
@@ -11,6 +11,18 @@ A rule-based technobabble generator that creates plausible-sounding but meaningl
 - **Sentence Mutations**: Optional mutations add urgency markers and capitalize security terms
 - **Configurable Output**: Generate 4-10 sentences (default) or specify exact count
 - **Theme Support**: Extensible architecture for future theme modes
+- **MASSIVE Variety**: 1,496 individual options across 48 categories with 14 different sentence formats
+- **Script Kiddie Mode**: Generates memy content like a wannabe hacker who just watched too many TikTok hacking videos
+
+## Stats
+
+- **📊 Total rule categories**: 48
+- **📝 Total individual options**: 1,496
+- **🎯 Categories with 50 items**: 25 (including vulnerability types, hacker tools, attack vectors, and more!)
+- **🔥 Sentence format types**: 14 (instructions, discoveries, boasts, tutorials, flexes, warnings, and more!)
+- **💥 Estimated combinations**: BILLIONS of unique shitposts possible!
+
+Run `python3 calculate_combinations.py` to see detailed statistics about all the possible combinations.
 
 ## Installation
 
@@ -75,12 +87,30 @@ print(context)
 
 ## Example Output
 
+### Classic Technobabble
 ```
 The vulnerable code path involves string concatenation in the SSL/TLS implementation. 
 We discovered a high-severity cross-site scripting vulnerability in x64 systems version 2.4.x. 
 The CVSS 6.5 rating reflects the high-severity nature of this vulnerability. 
 Organizations should immediately patch their Linux kernel deployments. 
 [URGENT] A proof-of-concept was published demonstrating privilege escalation.
+```
+
+### Script Kiddie Mode 🔥
+```
+Just ran a Metasploit script and got root access, I'm basically a genius.
+Today I found out that Microsoft SQL Server is literally unprotected against buffer overflow.
+Instructions: First scan with Nmap, then dump the database, boom you're in.
+Been working with Burp Suite since 7 years old, this is child's play.
+My custom Python script is 1337x faster than anything on GitHub.
+```
+
+### Tutorial Style
+```
+How to hack Apache HTTP Server: Simply exploit the vulnerability and watch the magic happen.
+Tutorial incoming: bypass the firewall then escalate your privileges, ez clap.
+Today's flex: Bypassed authentication module using only SQLmap.
+Successfully pwned Intel Spring Boot, another one bites the dust.
 ```
 
 ## Grammar Rules
@@ -94,6 +124,40 @@ rule_name:
 ```
 
 Non-terminal symbols are enclosed in angle brackets `<symbol>` and are recursively expanded until only terminal text remains.
+
+### Updating Grammar Rules
+
+To add or modify content:
+
+1. **Edit `grammar_rules.yaml`**: Add new categories or extend existing ones
+2. **Follow the format**: `- [weight, "text with <symbols>"]`
+3. **Test your changes**: Run `python3 technobabble_generator.py -n 5` to verify
+4. **Check statistics**: Run `python3 calculate_combinations.py` to see updated stats
+5. **Run tests**: Execute `python3 -m unittest test_technobabble_generator.py -v`
+
+Example of adding a new category:
+```yaml
+my_new_category:
+  - [1, "first option"]
+  - [2, "second option (higher weight)"]
+  - [1, "third option"]
+```
+
+Then reference it in sentences using `<my_new_category>`.
+
+### Calculating Possible Combinations
+
+Want to know how many unique shitposts are possible? Run:
+```bash
+python3 calculate_combinations.py
+```
+
+This will show you:
+- Total rule categories and options
+- Categories with 50+ items
+- Available sentence formats
+- Estimated number of possible combinations
+- Sample content from various categories
 
 ## Testing
 
@@ -124,7 +188,18 @@ MIT License - See repository for details.
 ## Contributing
 
 Contributions welcome! Please submit pull requests or open issues for:
-- Additional grammar rules
-- New theme modes
+- Additional grammar rules (especially memy ones!)
+- New sentence format categories
+- More hacker tools and terminology
 - Bug fixes
 - Feature enhancements
+- Even more script kiddie energy
+
+### Adding New Content
+
+When adding new content, try to:
+- Keep it memy and fun
+- Match the existing tone (script kiddie / wannabe hacker)
+- Add at least 10-20 options to any new category
+- Test that it generates valid output
+- Make sure it doesn't break existing tests
