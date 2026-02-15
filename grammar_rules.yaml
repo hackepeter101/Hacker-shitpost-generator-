@@ -1,0 +1,203 @@
+---
+# Grammar rules for technobabble generation
+# Format: rule_name: [[weight, expansion], [weight, expansion], ...]
+
+sentence:
+  - [3, "<exploit_sentence>"]
+  - [2, "<vulnerability_sentence>"]
+  - [2, "<security_sentence>"]
+  - [1, "<technical_sentence>"]
+
+exploit_sentence:
+  - [1, "We discovered a <severity> <vulnerability_type> in <target_system> <version_context>."]
+  - [1, "The <vulnerability_type> allows <attack_vector> via <attack_method>."]
+  - [1, "By exploiting <vulnerability_type>, attackers can <attack_goal> on <target_system>."]
+  - [1, "This <severity> vulnerability in <component> could lead to <impact>."]
+
+vulnerability_sentence:
+  - [1, "The vulnerability exists in the <component> of <target_system>."]
+  - [1, "Affected versions include <version_context>."]
+  - [1, "The issue was found in <component> during <discovery_method>."]
+  - [1, "<vendor> has acknowledged the <vulnerability_type> in <product>."]
+
+security_sentence:
+  - [1, "Security researchers recommend <mitigation> to prevent exploitation."]
+  - [1, "The <cvss_score> rating reflects the <severity> nature of this vulnerability."]
+  - [1, "Organizations should immediately <action> their <target_system> deployments."]
+  - [1, "A proof-of-concept was published demonstrating <attack_vector>."]
+
+technical_sentence:
+  - [1, "The root cause lies in improper <tech_issue> within the <architecture_component>."]
+  - [1, "Analysis reveals that <technical_detail> is not properly <security_action>."]
+  - [1, "The vulnerable code path involves <tech_process> in the <component>."]
+  - [1, "Further investigation shows <technical_finding>."]
+
+severity:
+  - [2, "critical"]
+  - [3, "high-severity"]
+  - [2, "moderate"]
+  - [1, "low-risk"]
+
+vulnerability_type:
+  - [3, "buffer overflow"]
+  - [2, "remote code execution vulnerability"]
+  - [2, "SQL injection flaw"]
+  - [2, "cross-site scripting vulnerability"]
+  - [2, "privilege escalation bug"]
+  - [1, "memory corruption issue"]
+  - [2, "authentication bypass"]
+  - [1, "denial of service vulnerability"]
+  - [1, "path traversal vulnerability"]
+  - [1, "integer overflow"]
+
+target_system:
+  - [2, "<vendor> <product>"]
+  - [1, "<os> kernel"]
+  - [1, "the <product> server"]
+  - [1, "<architecture> systems"]
+
+vendor:
+  - [1, "Microsoft"]
+  - [1, "Linux"]
+  - [1, "Apache"]
+  - [1, "Cisco"]
+  - [1, "VMware"]
+  - [1, "Oracle"]
+  - [1, "IBM"]
+  - [1, "Red Hat"]
+
+product:
+  - [1, "Windows Server"]
+  - [1, "SQL Server"]
+  - [1, "Exchange"]
+  - [1, "Apache HTTP Server"]
+  - [1, "OpenSSL"]
+  - [1, "Chrome"]
+  - [1, "Firefox"]
+  - [1, "Safari"]
+
+os:
+  - [1, "Linux"]
+  - [1, "Windows"]
+  - [1, "Unix"]
+  - [1, "FreeBSD"]
+
+architecture:
+  - [1, "x86"]
+  - [1, "ARM"]
+  - [1, "x64"]
+  - [1, "MIPS"]
+
+version_context:
+  - [1, "versions <version_range>"]
+  - [1, "version <version_number>"]
+  - [1, "<version_number> and earlier"]
+
+version_range:
+  - [1, "<version_number> through <version_number>"]
+  - [1, "prior to <version_number>"]
+
+version_number:
+  - [1, "2.4.x"]
+  - [1, "3.1.2"]
+  - [1, "1.0.5"]
+  - [1, "4.2.0"]
+  - [1, "5.0.1"]
+  - [1, "10.0.x"]
+
+attack_vector:
+  - [1, "remote code execution"]
+  - [1, "privilege escalation"]
+  - [1, "unauthorized access"]
+  - [1, "arbitrary code execution"]
+  - [1, "information disclosure"]
+
+attack_method:
+  - [1, "crafted network packets"]
+  - [1, "malicious input validation"]
+  - [1, "specially crafted requests"]
+  - [1, "manipulated API calls"]
+  - [1, "malformed data structures"]
+
+attack_goal:
+  - [1, "execute arbitrary code"]
+  - [1, "gain elevated privileges"]
+  - [1, "bypass authentication"]
+  - [1, "access sensitive data"]
+  - [1, "crash the system"]
+
+component:
+  - [1, "HTTP parser"]
+  - [1, "SSL/TLS implementation"]
+  - [1, "authentication module"]
+  - [1, "memory allocator"]
+  - [1, "network stack"]
+  - [1, "file system driver"]
+  - [1, "cryptographic library"]
+
+discovery_method:
+  - [1, "fuzzing"]
+  - [1, "static analysis"]
+  - [1, "penetration testing"]
+  - [1, "code review"]
+
+mitigation:
+  - [1, "applying the latest security patches"]
+  - [1, "implementing input validation"]
+  - [1, "upgrading to the patched version"]
+  - [1, "disabling affected features"]
+  - [1, "configuring firewall rules"]
+
+cvss_score:
+  - [1, "CVSS 9.8"]
+  - [1, "CVSS 7.5"]
+  - [1, "CVSS 8.1"]
+  - [1, "CVSS 6.5"]
+
+action:
+  - [1, "patch"]
+  - [1, "update"]
+  - [1, "audit"]
+  - [1, "secure"]
+
+impact:
+  - [1, "complete system compromise"]
+  - [1, "data exfiltration"]
+  - [1, "service disruption"]
+  - [1, "unauthorized system access"]
+
+tech_issue:
+  - [1, "input sanitization"]
+  - [1, "bounds checking"]
+  - [1, "memory management"]
+  - [1, "error handling"]
+
+architecture_component:
+  - [1, "request handler"]
+  - [1, "session manager"]
+  - [1, "buffer allocation routine"]
+  - [1, "protocol implementation"]
+
+technical_detail:
+  - [1, "user-supplied input"]
+  - [1, "the authentication token"]
+  - [1, "memory boundaries"]
+  - [1, "session state"]
+
+security_action:
+  - [1, "validated"]
+  - [1, "sanitized"]
+  - [1, "checked"]
+  - [1, "encrypted"]
+
+tech_process:
+  - [1, "buffer copying"]
+  - [1, "pointer arithmetic"]
+  - [1, "string concatenation"]
+  - [1, "memory allocation"]
+
+technical_finding:
+  - [1, "multiple attack vectors are possible"]
+  - [1, "the vulnerability chain can be exploited remotely"]
+  - [1, "no authentication is required for exploitation"]
+  - [1, "the attack complexity is considered low"]
