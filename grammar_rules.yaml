@@ -298,6 +298,20 @@ vulnerability_type:
   - [1, "default password"]
   - [2, "brute force weakness"]
   - [1, "logic flaw"]
+  - [1, "the server accepts connections"]
+  - [1, "the application uses memory"]
+  - [1, "the database stores data"]
+  - [1, "the login page accepts passwords"]
+  - [1, "HTTP traffic is unencrypted"]
+  - [1, "the system has open ports"]
+  - [1, "the server responds to requests"]
+  - [1, "the application runs code"]
+  - [1, "files are stored on disk"]
+  - [1, "the network transmits data"]
+  - [1, "processes use CPU cycles"]
+  - [1, "cookies are sent with requests"]
+  - [1, "the firewall filters packets"]
+  - [1, "RAM contains active data"]
 
 target_system:
   - [2, "<vendor> <product>"]
@@ -1768,6 +1782,9 @@ just_found:
   - [1, "Just found: {C SYSTEM} has {C vulnerability_type} that lets you {C attack_goal}. This is {R 10-1000}x worse than {O Log4j|Heartbleed|Shellshock|WannaCry}."]
   - [1, "Holy shit guys, {C vendor} {C product} version {R 1-15}.{R 0-99} just {O crashes|dumps memory|leaks secrets|grants root} when you send '{M2 A|B|C|\\x00|\\xff|%s|%n|../' * {R 1000-9999}. CVE pending."]
   - [1, "Found something insane: {C SYSTEM} {C component} doesn't {C security_action} {C technical_detail}. Been there since {R 2010-2023}. Nobody noticed."]
+  - [1, "Breaking: {C SYSTEM} has {C vulnerability_type}. URGENT FIX NEEDED. This is literally how the system is supposed to work but still."]
+  - [1, "Today I discovered that {C SYSTEM} {O accepts user input|stores data|processes requests|executes code}. This is a CRITICAL issue that needs immediate attention."]
+  - [1, "No way. {C vendor} {C product} literally {O uses bandwidth|consumes electricity|occupies disk space|runs on hardware}. How is this acceptable in {R 2024-2026}?"]
 
 anomaly:
   - [1, "Weird behavior: When {C SYSTEM} receives {O malformed|oversized|negative|NULL} {C technical_detail}, it {O crashes|hangs|reboots|grants access}. Reproducible {R 95-100}% of the time."]
@@ -1789,6 +1806,8 @@ WARNING_POST:
   - [1, "⛔ STOP USING {C SYSTEM} until further notice. Critical {C vulnerability_type} allows {C attack_vector} with {O zero|minimal|trivial} effort."]
   - [1, "ALERT: {C vendor} confirms {C vulnerability_type} in {C product}. Known exploitation in the wild. {C mitigation} ineffective. Only solution: {O upgrade|migrate|disconnect}."]
   - [1, "THREAT ADVISORY: {C SYSTEM} {C component} under active attack. Threat actors using {C TOOLING} to {C ACTION}. Defensive measures: {C mitigation}."]
+  - [1, "⚠️ BREAKING NEWS: {C SYSTEM} {O listens on ports|allocates memory|sends network packets|writes to logs}. Security experts recommend {O turning it off|unplugging it|avoiding it entirely}."]
+  - [1, "ALERT: {C vendor} confirms {C product} has {C vulnerability_type}. CVE-{R 2020-2026}-{R 10000-99999} assigned. This is just how {C component} works but we're calling it a vuln anyway."]
 
 # RANT_POST - Complaints and rants (7 options)
 RANT_POST:
@@ -1799,6 +1818,8 @@ RANT_POST:
   - [1, "Unpopular opinion: {C hacker_tool} is overrated. Everyone uses it but {C target_system} has built-in tools that do {R 2-10}x better."]
   - [1, "{C SYSTEM} devs clearly never heard of {C security_action}. Like how hard is it to {C security_action} inputs? I could fix this in {R 1-24} hours."]
   - [1, "The state of {C component} security in {R 2025-2026} is embarrassing. We have {C vulnerability_type} that {O shouldn't exist|were solved in the 90s|are taught in CS101}."]
+  - [1, "Just realized {C SYSTEM} has {C vulnerability_type}. Like no shit Sherlock, that's literally the entire point of {C component}. Why is everyone freaking out?"]
+  - [1, "PSA: {C vendor} {C product} {O uses TCP/IP|needs electricity|requires storage|has an IP address}. Everyone acting shocked like this is news. Welcome to {R 2020-2026} I guess."]
 
 # THEORY_POST - Theories and speculation (6 options)
 THEORY_POST:
