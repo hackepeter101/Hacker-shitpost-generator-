@@ -11,16 +11,19 @@ A rule-based technobabble generator that creates plausible-sounding but meaningl
 - **Sentence Mutations**: Optional mutations add urgency markers and capitalize security terms
 - **Configurable Output**: Generate 4-10 sentences (default) or specify exact count
 - **Theme Support**: Extensible architecture for future theme modes
-- **MASSIVE Variety**: 1,496 individual options across 48 categories with 14 different sentence formats
+- **MASSIVE Variety**: 1,496+ individual options across 87+ categories with 14+ different sentence formats
 - **Script Kiddie Mode**: Generates memy content like a wannabe hacker who just watched too many TikTok hacking videos
+- **Hierarchical POST Structure**: New category system with TYPE, INTRO, TECH_CHAIN, EVIDENCE, CONSEQUENCE, COMMENT, and OUTRO
+- **Custom DSL**: Domain-specific language for dynamic content with {R}, {O}, {M}, {W}, and {C} expressions
 
 ## Stats
 
-- **📊 Total rule categories**: 48
-- **📝 Total individual options**: 1,496
-- **🎯 Categories with 50 items**: 25 (including vulnerability types, hacker tools, attack vectors, and more!)
-- **🔥 Sentence format types**: 14 (instructions, discoveries, boasts, tutorials, flexes, warnings, and more!)
-- **💥 Estimated combinations**: BILLIONS of unique shitposts possible!
+- **📊 Total rule categories**: 87+ (including new hierarchical POST structure)
+- **📝 Total individual options**: 1,800+
+- **🎯 New POST types**: 6 (TUTORIAL, TIP, DISCOVERY, WARNING, RANT, THEORY)
+- **🔥 Sentence format types**: 14+ (instructions, discoveries, boasts, tutorials, flexes, warnings, and more!)
+- **💥 Estimated combinations**: TRILLIONS of unique shitposts possible!
+- **🎨 DSL expressions**: 5 types (Random range, OR choice, Multi-pick, Weighted, Category calls)
 
 Run `python3 calculate_combinations.py` to see detailed statistics about all the possible combinations.
 
@@ -73,6 +76,77 @@ Generate formatted posts (threads, tutorials, reports):
 python3 technobabble_generator.py --format
 ```
 
+Generate using new POST hierarchical structure:
+```bash
+python3 technobabble_generator.py --post
+```
+
+### New POST Structure (Hierarchical Categories)
+
+The generator now supports a hierarchical post structure with the following categories:
+
+**POST Types (6 types):**
+- `TUTORIAL_POST` (12 variations) - Step-by-step guides with intro steps, fake tools, and step chains
+- `TIP_POST` (10 variations) - Quick tips, hidden settings, and micro warnings
+- `DISCOVERY_POST` (9 variations) - "Just found" discoveries, anomalies, and accidental fixes
+- `WARNING_POST` (8 variations) - Critical alerts and warnings
+- `RANT_POST` (7 variations) - Complaints and rants about security
+- `THEORY_POST` (6 variations) - Theories and speculation
+
+**Post Components:**
+- `INTRO` (8 options) - casual, urgent, or cryptic intros
+- `TECH_CHAIN` (56 options) - Technical details including:
+  - `SYSTEM` (10 options): OS (6) + VENDOR (4)
+  - `EXPLOIT_STYLE` (12 options): memory (4) + protocol (4) + timing (4)
+  - `CONNECTION` (9 options): Network/interface details
+  - `TOOLING` (11 options): Security tools
+  - `ACTION` (14 options): Hacker actions
+- `EVIDENCE` (7 options) - fake logs, version numbers, screenshot claims
+- `CONSEQUENCE` (9 options) - soft fail, total brick, or "works somehow"
+- `COMMENT` (8 options) - insider, sarcastic, or conspiracy commentary
+- `OUTRO` (6 options) - shrug, call to action, or vanish endings
+
+### Custom DSL (Domain Specific Language)
+
+The generator supports a custom DSL for dynamic content generation:
+
+**Random Range:**
+```
+{R 100-999}  → Generates random integer between 100 and 999
+```
+
+**OR Choice:**
+```
+{O android|linux|qnx}  → Randomly selects one option
+```
+
+**Multi-Pick (unique items):**
+```
+{M2 exploit|overflow|race|leak}  → Picks 2 distinct items
+```
+
+**Weighted Choice:**
+```
+{W overflow:5|race:2|leak:1}  → Weighted random selection
+```
+
+**Category Call:**
+```
+{C SYSTEM}   → Picks one random item from SYSTEM category
+{C2 ACTION}  → Picks 2 unique items from ACTION category
+```
+
+**Nested Expressions:**
+```
+CVE-{R 2018-2026}-{R 1000-99999}  → CVE-2021-54832
+```
+
+The DSL resolver:
+- Evaluates inner braces first
+- Ensures uniqueness in multi-pick operations
+- Supports up to 20 levels of nesting
+- Categories are resolved via weighted random selection
+
 ### Python API
 
 ```python
@@ -88,7 +162,10 @@ print(output)
 # Generate formatted posts (threads, tutorials, etc.)
 formatted = gen.generate(use_format=True)
 print(formatted)
-print(output)
+
+# Generate using new POST hierarchical structure
+post = gen.generate(use_post=True)
+print(post)
 
 # Get context memory
 context = gen.get_context()
@@ -96,6 +173,51 @@ print(context)
 ```
 
 ## Example Output
+
+### New POST Structure Examples
+
+**Tutorial Post:**
+```
+So I was messing around with Android 12 and...
+
+Tutorial: Start by trigger privilege escalation on Linux kernel 5.14, then discover misconfigurations. Watch it break.
+
+Retweet to spread awareness. Like and subscribe. You know the drill.
+```
+
+**Discovery Post:**
+```
+🚨 EVERYONE NEEDS TO SEE THIS 🚨
+
+Holy shit guys, Microsoft Windows 10 build 19042 just dumps memory when you send 'A \\xff' * 5932. CVE pending.
+
+Running Linux kernel 4.8 version 3.10 (stable release)
+
+Weirdly it just works even though it mustn't.
+
+Makes you wonder if Oracle and CIA are monitoring everyone.
+
+Drop a ⭐ if this helped. Follow for more hacks.
+```
+
+**Warning Post:**
+```
+⚠️ WARNING: Docker MongoDB versions 3.x all have memory corruption. CVSS 8.7. Patch or disconnect.
+```
+
+**Rant Post:**
+```
+Interesting thing I found today...
+
+Can we talk about how FreeBSD 14.2 is literally the worst? Like authentication system doesn't even neutralize user input properly. It's 2025 ffs.
+
+So yeah. Make of that what you want. 🤷
+```
+
+**Theory Post:**
+```
+Theory: IBM intentionally left XML bomb in Tomcat as a honeypot. Evidence: timing behavior.
+```
 
 ### Classic Technobabble
 ```
