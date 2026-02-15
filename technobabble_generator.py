@@ -182,6 +182,7 @@ class TechnobabbleGenerator:
 def main():
     """Main CLI interface."""
     import argparse
+    import sys
     
     parser = argparse.ArgumentParser(
         description='Generate plausible-sounding security technobabble'
@@ -234,13 +235,13 @@ def main():
         
         # Show seed if it was set
         if args.seed is not None:
-            print(f"\n[Seed: {args.seed}]", file=__import__('sys').stderr)
+            print(f"\n[Seed: {args.seed}]", file=sys.stderr)
             
     except FileNotFoundError as e:
-        print(f"Error: Grammar file not found: {e}", file=__import__('sys').stderr)
+        print(f"Error: Grammar file not found: {e}", file=sys.stderr)
         return 1
     except Exception as e:
-        print(f"Error: {e}", file=__import__('sys').stderr)
+        print(f"Error: {e}", file=sys.stderr)
         return 1
     
     return 0
