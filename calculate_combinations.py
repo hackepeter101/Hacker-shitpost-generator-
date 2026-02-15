@@ -5,7 +5,6 @@ This gives a rough estimate of the variety the generator can produce.
 """
 
 import yaml
-from functools import lru_cache
 from typing import Dict, List, Tuple, Set
 import re
 
@@ -22,13 +21,14 @@ def get_non_terminals(text: str) -> Set[str]:
     return set(re.findall(pattern, text))
 
 
-@lru_cache(maxsize=None)
 def calculate_combinations_recursive(symbol: str, grammar_dict: dict, max_depth: int = 20, depth: int = 0, visited: set = None) -> int:
     """
     Calculate the number of possible combinations for a given symbol.
     
     This is a rough estimate that counts unique paths through the grammar tree.
     Due to recursion and context dependencies, actual variety may differ.
+    
+    Note: visited is an internal implementation detail for tracking recursion.
     """
     if visited is None:
         visited = set()
