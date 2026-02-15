@@ -1668,3 +1668,344 @@ warning_sentence_ranged:
   - [1, "Over <random:10000-1000000> systems are vulnerable right now, patch immediately."]
   - [1, "This affects <random:50-100>% of <target_system> deployments worldwide."]
   - [1, "Exploits will be public in <random:1-72> hours, you've been warned."]
+
+# ============================================================================
+# NEW HIERARCHICAL POST STRUCTURE
+# Based on issue requirements: categories with counts
+# ============================================================================
+
+# POST is the root - can be of different TYPEs
+POST:
+  - [6, "<TYPE>"]
+  - [8, "<INTRO>\n\n<TYPE>\n\n<OUTRO>"]
+  - [4, "<INTRO>\n\n<TYPE>\n\n<EVIDENCE>\n\n<CONSEQUENCE>\n\n<OUTRO>"]
+  - [3, "<INTRO>\n\n<TYPE>\n\n<TECH_CHAIN>\n\n<EVIDENCE>\n\n<COMMENT>\n\n<OUTRO>"]
+
+# TYPE - Different types of posts (6 total)
+TYPE:
+  - [12, "<TUTORIAL_POST>"]
+  - [10, "<TIP_POST>"]
+  - [9, "<DISCOVERY_POST>"]
+  - [8, "<WARNING_POST>"]
+  - [7, "<RANT_POST>"]
+  - [6, "<THEORY_POST>"]
+
+# TUTORIAL_POST - Step-by-step guides (12 options across subcategories)
+TUTORIAL_POST:
+  - [1, "<intro_steps>"]
+  - [1, "<intro_steps>"]
+  - [1, "<intro_steps>"]
+  - [1, "<intro_steps>"]
+  - [1, "<fake_tools>"]
+  - [1, "<fake_tools>"]
+  - [1, "<fake_tools>"]
+  - [1, "<fake_tools>"]
+  - [1, "<fake_tools>"]
+  - [1, "<step_chain>"]
+  - [1, "<step_chain>"]
+  - [1, "<step_chain>"]
+
+intro_steps:
+  - [1, "How to {C attack_goal} in {R 3-10} easy steps: First {C instruction_action}, then {C instruction_action}, finally {C instruction_action}. Easy money."]
+  - [1, "Tutorial: Start by {C instruction_action} on {C SYSTEM}, then {C instruction_action}. Watch it break."]
+  - [1, "Step-by-step guide: {C instruction_action} the {C component} using {C hacker_tool}. Takes like {R 5-30} minutes max."]
+  - [1, "Quick tutorial: Just {C instruction_action} and boom, instant {C hacker_result}. My {R 7-14} year old cousin can do this."]
+
+fake_tools:
+  - [1, "Use my custom script (totally real): {M2 exploit|pwn|crack|dump|inject}.py with flags --{O fast|stealth|quiet|verbose} --port={R 1000-9999}"]
+  - [1, "Run {C hacker_tool} with parameters: -x {R 1-100} -t {O tcp|udp|http|https} -p {R 1024-65535}. Works every time."]
+  - [1, "Fire up {C hacker_tool} and set mode to '{O aggressive|stealth|ninja|turbo}'. Then {C instruction_action} and watch the magic."]
+  - [1, "Download {O HackTool|ExploitKit|PwnSuite|CrackMaster} {R 2-9}.{R 0-99} and run with --{O exploit|bypass|inject} flag on {C SYSTEM}."]
+  - [1, "Get {C hacker_tool}, configure with {M2 buffer|heap|stack|kernel} mode, then {C ACTION} the {C component}. Pro tip: use --{O silent|ghost|shadow} mode."]
+
+step_chain:
+  - [1, "{C instruction_action}, then {C instruction_action}, then {C instruction_action}. Literally that easy. Subscribe for more."]
+  - [1, "Chain these actions: {C2 ACTION} then {C ACTION}. Your {C SYSTEM} is now completely compromised lol."]
+  - [1, "Three steps to own {C SYSTEM}: {R 1}. {C ACTION} {R 2}. {C ACTION} {R 3}. {C ACTION}. GG."]
+
+# TIP_POST - Quick tips and tricks (10 options)
+TIP_POST:
+  - [1, "<quick_tip>"]
+  - [1, "<quick_tip>"]
+  - [1, "<quick_tip>"]
+  - [1, "<quick_tip>"]
+  - [1, "<hidden_setting>"]
+  - [1, "<hidden_setting>"]
+  - [1, "<hidden_setting>"]
+  - [1, "<micro_warning>"]
+  - [1, "<micro_warning>"]
+  - [1, "<micro_warning>"]
+
+quick_tip:
+  - [1, "Pro tip: {C hacker_tool} has a hidden {O --bypass|--root|--admin|--god} flag that nobody talks about. Use it on {C SYSTEM} for instant {C hacker_result}."]
+  - [1, "Quick hack: If you {C instruction_action} before {C instruction_action}, it bypasses {C component} completely. Saved you ${R 1000-50000} in pentesting fees."]
+  - [1, "Life hack: {C SYSTEM} version {R 1-9}.{R 0-99}.{R 0-99} has a backdoor at port {R 1024-9999}. Just telnet in with admin/admin."]
+  - [1, "Secret: {C vendor} {C product} logs credentials in plaintext at {O /var/log|/tmp|/opt|C:\\Windows\\Temp}. Just {C ACTION} and you're in."]
+
+hidden_setting:
+  - [1, "Did you know? {C SYSTEM} has a debug mode at {O localhost|127.0.0.1|0.0.0.0}:{R 1337-31337}. Full access, no auth needed."]
+  - [1, "Hidden feature: Set environment variable {O DEBUG|ADMIN|ROOT|GOD}_MODE={O 1|true|yes} on {C SYSTEM} for unlimited power."]
+  - [1, "Nobody knows this: {C component} stores {O passwords|keys|tokens|secrets} in {O base64|rot13|plaintext}. Just decode and profit."]
+
+micro_warning:
+  - [1, "PSA: Don't use {C SYSTEM} version {R 1-9}.{R 0-99} or earlier. It's literally {M2 broken|vulnerable|exploitable|pwned|compromised}."]
+  - [1, "Heads up: {C vendor} {C product} {O leaks|exposes|dumps|broadcasts} {C technical_detail} over {C CONNECTION}. Patch ASAP."]
+  - [1, "FYI: If you see '{O error|warning|debug|trace} {R 100-999}' on {C SYSTEM}, you're already {C hacked_action}. RIP."]
+
+# DISCOVERY_POST - Findings and discoveries (9 options)
+DISCOVERY_POST:
+  - [1, "<just_found>"]
+  - [1, "<just_found>"]
+  - [1, "<just_found>"]
+  - [1, "<anomaly>"]
+  - [1, "<anomaly>"]
+  - [1, "<anomaly>"]
+  - [1, "<accidental_fix>"]
+  - [1, "<accidental_fix>"]
+  - [1, "<accidental_fix>"]
+
+just_found:
+  - [1, "Just found: {C SYSTEM} has {C vulnerability_type} that lets you {C attack_goal}. This is {R 10-1000}x worse than {O Log4j|Heartbleed|Shellshock|WannaCry}."]
+  - [1, "Holy shit guys, {C vendor} {C product} version {R 1-15}.{R 0-99} just {O crashes|dumps memory|leaks secrets|grants root} when you send '{M2 A|B|C|\\x00|\\xff|%s|%n|../' * {R 1000-9999}. CVE pending."]
+  - [1, "Found something insane: {C SYSTEM} {C component} doesn't {C security_action} {C technical_detail}. Been there since {R 2010-2023}. Nobody noticed."]
+
+anomaly:
+  - [1, "Weird behavior: When {C SYSTEM} receives {O malformed|oversized|negative|NULL} {C technical_detail}, it {O crashes|hangs|reboots|grants access}. Reproducible {R 95-100}% of the time."]
+  - [1, "Strange finding: {C vendor} {C product} {C component} has {R 10-50} {O hardcoded|default|embedded} credentials. All {O documented|public|in source code}."]
+  - [1, "Anomaly detected: {C SYSTEM} logs show {C EXPLOIT_STYLE} attempts from {R 100-10000} IPs. All successful. All {R 1-72} hours old. Patch when?"]
+
+accidental_fix:
+  - [1, "So I was trying to {C attack_goal} on {C SYSTEM} and accidentally {O fixed|broke|destroyed|optimized} the {C component}. Now it's {O faster|slower|more secure|completely unusable}."]
+  - [1, "Tried to {C ACTION} the {C component} and somehow it {O patched|bypassed|disabled|enabled} {C security_action}. Not sure if bug or feature."]
+  - [1, "Was testing {C EXPLOIT_STYLE} on {C SYSTEM} and it just {O crashed|rebooted|reset|updated} itself. Problem solved? I guess?"]
+
+# WARNING_POST - Alerts and warnings (8 options)
+WARNING_POST:
+  - [1, "🚨 CRITICAL: {C SYSTEM} has {C vulnerability_type}. Affects {R 1000-1000000}+ systems. Exploit code public in {R 1-72} hours. {C mitigation} NOW."]
+  - [1, "⚠️ WARNING: {C vendor} {C product} versions {R 1-10}.x all have {C vulnerability_type}. CVSS {R 8-10}.{R 0-9}. Patch or disconnect."]
+  - [1, "URGENT: Active {C EXPLOIT_STYLE} campaigns targeting {C SYSTEM}. {R 50-100}% success rate. Seeing {R 1000-100000} attempts per hour globally."]
+  - [1, "RED ALERT: {C component} in {C SYSTEM} is completely {M2 broken|vulnerable|exploitable|compromised}. Emergency {C mitigation} required."]
+  - [1, "BREAKING: Mass exploitation of {C vulnerability_type} in {C SYSTEM}. {R 10000-1000000} systems already {C hacked_action}. You're next if you don't act."]
+  - [1, "⛔ STOP USING {C SYSTEM} until further notice. Critical {C vulnerability_type} allows {C attack_vector} with {O zero|minimal|trivial} effort."]
+  - [1, "ALERT: {C vendor} confirms {C vulnerability_type} in {C product}. Known exploitation in the wild. {C mitigation} ineffective. Only solution: {O upgrade|migrate|disconnect}."]
+  - [1, "THREAT ADVISORY: {C SYSTEM} {C component} under active attack. Threat actors using {C TOOLING} to {C ACTION}. Defensive measures: {C mitigation}."]
+
+# RANT_POST - Complaints and rants (7 options)
+RANT_POST:
+  - [1, "Can we talk about how {C SYSTEM} is literally the worst? Like {C component} doesn't even {C security_action} properly. It's {R 2018-2025} ffs."]
+  - [1, "I'm so done with {C vendor}. Their {C product} has had {C vulnerability_type} for {R 2-10} years and they {O don't care|won't fix it|blame users|ignore reports}."]
+  - [1, "Hot take: {C SYSTEM} is {O garbage|trash|broken|unusable}. Every update breaks {C component}. My {R 5-12} year old could code better."]
+  - [1, "Why is {C vendor} {C product} even a thing? It's {M3 slow|buggy|insecure|outdated|overpriced}. Just use {C target_system} instead."]
+  - [1, "Unpopular opinion: {C hacker_tool} is overrated. Everyone uses it but {C target_system} has built-in tools that do {R 2-10}x better."]
+  - [1, "{C SYSTEM} devs clearly never heard of {C security_action}. Like how hard is it to {C mitigation}? I could fix this in {R 1-24} hours."]
+  - [1, "The state of {C component} security in {R 2025-2026} is embarrassing. We have {C vulnerability_type} that {O shouldn't exist|were solved in the 90s|are taught in CS101}."]
+
+# THEORY_POST - Theories and speculation (6 options)
+THEORY_POST:
+  - [1, "Theory: {C vendor} intentionally left {C vulnerability_type} in {C product} as a {O backdoor|honeypot|easter egg}. Evidence: {M2 timing|pattern|behavior|code structure}."]
+  - [1, "Conspiracy: All {C SYSTEM} share the same {C component} vulnerability. Coincidence? I think {O not|it's coordinated|it's intentional}."]
+  - [1, "Hot take: {C vulnerability_type} in {C SYSTEM} is actually a {O feature|test|trap} for {O governments|corporations|hackers|researchers}."]
+  - [1, "Speculation: {C vendor} {C product} {C component} was designed to be {C vulnerability_type} from the start. Change my mind."]
+  - [1, "My theory: {C EXPLOIT_STYLE} works so well because {C SYSTEM} {C component} {O shares code|uses same library|has common ancestor} with {C target_system}."]
+  - [1, "Controversial opinion: {C vulnerability_type} is not a bug, it's {O intended behavior|design choice|business requirement}. Here's why: {C technical_finding}."]
+
+# INTRO - Post intros (8 options across subcategories)
+INTRO:
+  - [3, "<casual>"]
+  - [3, "<urgent>"]
+  - [2, "<cryptic>"]
+
+casual:
+  - [1, "So I was messing around with {C SYSTEM} and..."]
+  - [1, "Quick story about {C vendor} {C product}..."]
+  - [1, "Interesting thing I found today..."]
+
+urgent:
+  - [1, "🚨 EVERYONE NEEDS TO SEE THIS 🚨"]
+  - [1, "URGENT THREAD - this is not a drill"]
+  - [1, "DROP EVERYTHING AND READ THIS"]
+
+cryptic:
+  - [1, "You're not ready for this..."]
+  - [1, "They don't want you to know about..."]
+
+# TECH_CHAIN - Technical details chain (56 total options)
+TECH_CHAIN:
+  - [10, "<SYSTEM>"]
+  - [12, "<EXPLOIT_STYLE>"]
+  - [9, "<CONNECTION>"]
+  - [11, "<TOOLING>"]
+  - [14, "<ACTION>"]
+
+# SYSTEM subcategories (10 total: 6 OS + 4 VENDOR)
+SYSTEM:
+  - [1, "<OS>"]
+  - [1, "<OS>"]
+  - [1, "<OS>"]
+  - [1, "<OS>"]
+  - [1, "<OS>"]
+  - [1, "<OS>"]
+  - [1, "<VENDOR>"]
+  - [1, "<VENDOR>"]
+  - [1, "<VENDOR>"]
+  - [1, "<VENDOR>"]
+
+OS:
+  - [1, "Linux kernel {R 4-6}.{R 0-20}"]
+  - [1, "Windows {O 10|11|Server} build {R 10000-25000}"]
+  - [1, "macOS {O Ventura|Sonoma|Sequoia}"]
+  - [1, "Android {R 10-14}"]
+  - [1, "iOS {R 15-18}.{R 0-9}"]
+  - [1, "{O FreeBSD|OpenBSD|NetBSD} {R 11-15}.{R 0-9}"]
+
+VENDOR:
+  - [1, "{O Cisco|Juniper|Fortinet} {O router|firewall|switch}"]
+  - [1, "{O VMware|VirtualBox|Hyper-V} virtualization"]
+  - [1, "{O Apache|Nginx|IIS} web server"]
+  - [1, "{O Docker|Kubernetes|Podman} container"]
+
+# EXPLOIT_STYLE subcategories (12 total: 4 each)
+EXPLOIT_STYLE:
+  - [4, "<memory>"]
+  - [4, "<protocol>"]
+  - [4, "<timing>"]
+
+memory:
+  - [1, "buffer overflow in {O stack|heap|BSS}"]
+  - [1, "use-after-free on {O object|pointer|reference}"]
+  - [1, "memory corruption via {O integer overflow|format string|double free}"]
+  - [1, "{O out-of-bounds|uninitialized} memory {O read|write}"]
+
+protocol:
+  - [1, "{O HTTP|HTTPS|FTP|SSH} request smuggling"]
+  - [1, "{O TCP|UDP} packet manipulation"]
+  - [1, "{O DNS|ARP|DHCP} spoofing"]
+  - [1, "{O TLS|SSL} downgrade attack"]
+
+timing:
+  - [1, "race condition on {O file|socket|lock}"]
+  - [1, "time-of-check-time-of-use vulnerability"]
+  - [1, "timing side-channel on {O crypto|auth|cache}"]
+  - [1, "delay-based {O SQL injection|command injection}"]
+
+# CONNECTION (9 options)
+CONNECTION:
+  - [1, "over {O localhost|127.0.0.1|::1}"]
+  - [1, "via {O TCP|UDP} port {R 1024-65535}"]
+  - [1, "through {O HTTP|HTTPS|FTP|SSH|Telnet}"]
+  - [1, "using {O WebSocket|gRPC|REST|GraphQL} API"]
+  - [1, "by {O SMB|NFS|CIFS} share"]
+  - [1, "from {O LAN|WAN|VPN|Tor} network"]
+  - [1, "across {O serial|USB|Bluetooth} interface"]
+  - [1, "with {O IPv4|IPv6|dual-stack} addressing"]
+  - [1, "behind {O proxy|NAT|firewall|VPN}"]
+
+# TOOLING (11 options)
+TOOLING:
+  - [1, "{O Metasploit|Cobalt Strike|Empire|Sliver}"]
+  - [1, "{O Burp Suite|OWASP ZAP|mitmproxy}"]
+  - [1, "{O Nmap|Masscan|Zmap} scanner"]
+  - [1, "{O SQLmap|NoSQLmap|Commix}"]
+  - [1, "{O Wireshark|tcpdump|tshark}"]
+  - [1, "{O Hashcat|John|Hydra}"]
+  - [1, "{O Ghidra|IDA Pro|Binary Ninja}"]
+  - [1, "{O ffuf|gobuster|feroxbuster}"]
+  - [1, "{O Bloodhound|Mimikatz|Rubeus}"]
+  - [1, "{O Nuclei|httpx|subfinder}"]
+  - [1, "custom {O Python|Go|Rust} script"]
+
+# ACTION (14 options)
+ACTION:
+  - [1, "enumerate {O users|groups|services|processes}"]
+  - [1, "dump {O credentials|hashes|tokens|keys}"]
+  - [1, "inject {O SQL|XSS|LDAP|command}"]
+  - [1, "exploit {O RCE|LFI|RFI|XXE}"]
+  - [1, "escalate to {O root|SYSTEM|admin|domain admin}"]
+  - [1, "pivot through {O network|host|container}"]
+  - [1, "exfiltrate {O data|files|credentials|keys}"]
+  - [1, "persist via {O cron|service|registry|startup}"]
+  - [1, "bypass {O WAF|IDS|IPS|EDR}"]
+  - [1, "crack {O password|hash|encryption|key}"]
+  - [1, "scan {O ports|services|vulnerabilities}"]
+  - [1, "brute-force {O login|SSH|FTP|RDP}"]
+  - [1, "sniff {O packets|traffic|credentials}"]
+  - [1, "poison {O ARP|DNS|LLMNR|NBT-NS}"]
+
+# EVIDENCE - Proof claims (7 options)
+EVIDENCE:
+  - [3, "<fake_log>"]
+  - [2, "<version_number>"]
+  - [2, "<screenshot_claim>"]
+
+fake_log:
+  - [1, "Logs show:\n```\n[{R 00-23}:{R 00-59}:{R 00-59}] {O ERROR|WARN|FATAL}: {C component} {O crashed|failed|denied} (code {R 100-999})\n```"]
+  - [1, "Console output:\n```\n$ {C hacker_tool} --{O exploit|scan|dump} {R 192-254}.{R 0-255}.{R 0-255}.{R 1-254}\n[+] {O Found|Exploited|Dumped} {R 10-1000} {O targets|hosts|credentials}\n```"]
+  - [1, "Debug trace:\n```\nSegmentation fault at 0x{O 41414141|42424242|43434343|deadbeef|cafebabe}\n{C component}: {O stack|heap} corruption detected\n```"]
+
+version_number:
+  - [1, "Running {C SYSTEM} version {R 1-15}.{R 0-99}.{R 0-999} (build {R 10000-99999})"]
+  - [1, "Tested on {C vendor} {C product} v{R 1-10}.{R 0-20} ({O stable|beta|dev} release)"]
+
+screenshot_claim:
+  - [1, "(screenshots attached showing {O exploit|dump|access|crash})"]
+  - [1, "(full PoC video on my {O YouTube|TikTok|Twitter|Discord})"]
+
+# CONSEQUENCE - What happens (9 options)
+CONSEQUENCE:
+  - [3, "<soft_fail>"]
+  - [3, "<total_brick>"]
+  - [3, "<works_somehow>"]
+
+soft_fail:
+  - [1, "Result: {C component} {O hangs|crashes|errors out} but system {O recovers|restarts|continues}."]
+  - [1, "Impact: Service {O unavailable|degraded|slow} for {R 1-60} minutes then back to normal."]
+  - [1, "Outcome: {O Partial|Temporary} {C hacker_result}, {O logs filled|alerts triggered|audit trail left}."]
+
+total_brick:
+  - [1, "Result: Complete {O system failure|kernel panic|bootloop}. Device {O bricked|dead|unrecoverable}."]
+  - [1, "Impact: {O Data loss|Filesystem corruption|Hardware damage}. Requires {O reinstall|replacement|recovery}."]
+  - [1, "Outcome: {C SYSTEM} {O permanently compromised|completely owned|forever vulnerable}. No coming back from this."]
+
+works_somehow:
+  - [1, "Weirdly it just {O works|succeeds|completes} even though it {O shouldn't|can't|mustn't}."]
+  - [1, "Somehow {C hacker_result} achieved despite {O errors|warnings|crashes}. Don't ask me how."]
+  - [1, "It {O works|functions|runs} but {C component} is {O definitely broken|probably wrong|certainly not supposed to do that}."]
+
+# COMMENT - Commentary styles (8 options)
+COMMENT:
+  - [3, "<insider>"]
+  - [3, "<sarcastic>"]
+  - [2, "<conspiracy>"]
+
+insider:
+  - [1, "Source at {C vendor} says they {O knew|ignored|hid} this for {R 6-36} months."]
+  - [1, "My contact in the {O security|dev|ops} team confirms {C vulnerability_type} is {O intentional|wontfix|documented}."]
+  - [1, "Industry rumor: {C vendor} will {O not patch|deprecate|deny} this until {O Q{R 1-4} {R 2026-2027}|never}."]
+
+sarcastic:
+  - [1, "Totally normal that {C SYSTEM} {C component} does this. Very secure. Much wow."]
+  - [1, "I'm sure {C vendor} tested {C product} thoroughly. What could go wrong?"]
+  - [1, "Just {C security_action} properly? Nah, too difficult for {C vendor}."]
+
+conspiracy:
+  - [1, "Makes you wonder if {C vendor} and {O NSA|CIA|FSB|Mossad} are {O working together|sharing data|monitoring everyone}."]
+  - [1, "Convenient how {C vulnerability_type} exists in {O exactly|only|specifically} the {C component} that {O governments|corporations|agencies} need access to."]
+
+# OUTRO - Post endings (6 options)
+OUTRO:
+  - [2, "<shrug>"]
+  - [2, "<call_to_action>"]
+  - [2, "<vanish>"]
+
+shrug:
+  - [1, "Anyway, that's all I got. Do with it what you will."]
+  - [1, "So yeah. Make of that what you want. 🤷"]
+
+call_to_action:
+  - [1, "Drop a ⭐ if this helped. Follow for more {O chaos|hacks|findings|drama}."]
+  - [1, "Retweet to spread awareness. Like and subscribe. You know the drill."]
+
+vanish:
+  - [1, "I've said too much. Deleting this in {R 1-24} hours."]
+  - [1, "This stays between us. Don't @ me. 🤫"]
+

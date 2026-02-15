@@ -121,6 +121,86 @@ class TestTechnobabbleGenerator(unittest.TestCase):
             output = self.generator.generate(num_sentences=5)
             self.assertIsInstance(output, str)
             self.assertGreater(len(output), 0)
+    
+    def test_dsl_random_range(self):
+        """Test DSL random range {R min-max}."""
+        gen = TechnobabbleGenerator(seed=42)
+        result = gen._resolve_dsl("Value: {R 100-200}")
+        # Should contain a number between 100 and 200
+        self.assertNotIn('{R', result)
+        self.assertIn('Value:', result)
+    
+    def test_dsl_or_choice(self):
+        """Test DSL OR choice {O opt1|opt2|opt3}."""
+        gen = TechnobabbleGenerator(seed=42)
+        result = gen._resolve_dsl("Choose: {O apple|banana|cherry}")
+        # Should contain one of the options
+        self.assertNotIn('{O', result)
+        self.assertIn('Choose:', result)
+        self.assertTrue(any(fruit in result for fruit in ['apple', 'banana', 'cherry']))
+    
+    def test_dsl_multi_pick(self):
+        """Test DSL multi-pick {M2 item1|item2|item3}."""
+        gen = TechnobabbleGenerator(seed=42)
+        result = gen._resolve_dsl("Pick two: {M2 red|green|blue|yellow}")
+        # Should contain two different items
+        self.assertNotIn('{M2', result)
+        self.assertIn('Pick two:', result)
+    
+    def test_dsl_weighted_choice(self):
+        """Test DSL weighted choice {W item1:weight1|item2:weight2}."""
+        gen = TechnobabbleGenerator(seed=42)
+        result = gen._resolve_dsl("Weighted: {W common:10|rare:1}")
+        # Should contain one of the options
+        self.assertNotIn('{W', result)
+        self.assertIn('Weighted:', result)
+    
+    def test_dsl_category_call(self):
+        """Test DSL category call {C CATEGORY}."""
+        gen = TechnobabbleGenerator(seed=42)
+        # severity is a simple category in the grammar
+        result = gen._resolve_dsl("Severity: {C severity}")
+        # Should have resolved to something from severity category
+        self.assertNotIn('{C severity}', result)
+        self.assertIn('Severity:', result)
+    
+    def test_new_categories_exist(self):
+        """Test that new hierarchical categories are loaded."""
+        self.assertIn('POST', self.generator.grammar)
+        self.assertIn('TYPE', self.generator.grammar)
+        self.assertIn('TUTORIAL_POST', self.generator.grammar)
+        self.assertIn('TIP_POST', self.generator.grammar)
+        self.assertIn('DISCOVERY_POST', self.generator.grammar)
+        self.assertIn('WARNING_POST', self.generator.grammar)
+        self.assertIn('RANT_POST', self.generator.grammar)
+        self.assertIn('THEORY_POST', self.generator.grammar)
+        self.assertIn('INTRO', self.generator.grammar)
+        self.assertIn('TECH_CHAIN', self.generator.grammar)
+        self.assertIn('SYSTEM', self.generator.grammar)
+        self.assertIn('OS', self.generator.grammar)
+        self.assertIn('VENDOR', self.generator.grammar)
+        self.assertIn('EXPLOIT_STYLE', self.generator.grammar)
+        self.assertIn('EVIDENCE', self.generator.grammar)
+        self.assertIn('CONSEQUENCE', self.generator.grammar)
+        self.assertIn('COMMENT', self.generator.grammar)
+        self.assertIn('OUTRO', self.generator.grammar)
+    
+    def test_post_generation(self):
+        """Test that POST category generates valid output."""
+        gen = TechnobabbleGenerator(seed=42)
+        post = gen._expand_rule('<POST>')
+        # Should be a string with some content
+        self.assertIsInstance(post, str)
+        self.assertGreater(len(post), 10)
+        # Should not have unresolved symbols
+        self.assertNotIn('<', post)
+        self.assertNotIn('>', post)
+        # Should not have unresolved DSL
+        self.assertNotIn('{C', post)
+        self.assertNotIn('{R', post)
+        self.assertNotIn('{O', post)
+        self.assertNotIn('{M', post)
+        self.assertNotIn('{W', post)
 
 
 if __name__ == '__main__':
