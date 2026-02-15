@@ -48,6 +48,107 @@ class TechnobabbleGenerator:
         texts = [t for _, t in options]
         return random.choices(texts, weights=weights, k=1)[0]
     
+    def _resolve_dsl(self, text: str) -> str:
+        """
+        Resolve custom DSL expressions in text.
+        Supports:
+        - {R min-max} - Random range
+        - {O opt1|opt2|opt3} - OR choice
+        - {M2 item1|item2|item3} - Multi-pick (2 unique items)
+        - {W item1:weight1|item2:weight2} - Weighted choice
+        - {C CATEGORY} - Category call
+        - {C2 CATEGORY} - Multi-pick from category
+        
+        Args:
+            text: Text containing DSL expressions in curly braces
+            
+        Returns:
+            Text with DSL expressions resolved
+        """
+        # Pattern to match {COMMAND ...}
+        pattern = r'\{([^}]+)\}'
+        
+        def resolve_expression(match):
+            expr = match.group(1).strip()
+            
+            # Random range: {R 100-999}
+            if expr.startswith('R '):
+                range_part = expr[2:].strip()
+                try:
+                    start, end = map(int, range_part.split('-'))
+                    return str(random.randint(start, end))
+                except (ValueError, IndexError):
+                    return match.group(0)  # Return original if invalid
+            
+            # OR choice: {O opt1|opt2|opt3}
+            elif expr.startswith('O '):
+                options_part = expr[2:].strip()
+                options = [opt.strip() for opt in options_part.split('|')]
+                return random.choice(options)
+            
+            # Multi-pick: {M2 item1|item2|item3} or {MN item1|item2|item3}
+            elif expr.startswith('M') and ' ' in expr:
+                parts = expr.split(' ', 1)
+                try:
+                    count = int(parts[0][1:])  # Extract number from M2, M3, etc.
+                    items_part = parts[1].strip()
+                    items = [item.strip() for item in items_part.split('|')]
+                    # Pick 'count' unique items
+                    if count > len(items):
+                        count = len(items)
+                    selected = random.sample(items, count)
+                    return ' '.join(selected)
+                except (ValueError, IndexError):
+                    return match.group(0)
+            
+            # Weighted choice: {W item1:weight1|item2:weight2}
+            elif expr.startswith('W '):
+                options_part = expr[2:].strip()
+                try:
+                    items = []
+                    weights = []
+                    for option in options_part.split('|'):
+                        item, weight = option.strip().rsplit(':', 1)
+                        items.append(item.strip())
+                        weights.append(float(weight))
+                    return random.choices(items, weights=weights, k=1)[0]
+                except (ValueError, IndexError):
+                    return match.group(0)
+            
+            # Category call: {C CATEGORY} or {C2 CATEGORY}
+            elif expr.startswith('C'):
+                # Check if it's multi-pick from category like {C2 ACTION}
+                if expr[1:2].isdigit():
+                    try:
+                        count = int(expr[1])
+                        category = expr[2:].strip()
+                        if category in self.grammar:
+                            # Pick 'count' unique items from category
+                            options = [text for _, text in self.grammar[category]]
+                            if count > len(options):
+                                count = len(options)
+                            selected = random.sample(options, count)
+                            return ' '.join(selected)
+                    except (ValueError, IndexError):
+                        return match.group(0)
+                else:
+                    # Simple category call {C CATEGORY}
+                    category = expr[1:].strip()
+                    if category in self.grammar:
+                        return self._weighted_choice(self.grammar[category])
+            
+            return match.group(0)  # Return original if not matched
+        
+        # Keep resolving until no more expressions (for nested expressions)
+        max_iterations = 20
+        for _ in range(max_iterations):
+            new_text = re.sub(pattern, resolve_expression, text)
+            if new_text == text:
+                break
+            text = new_text
+        
+        return text
+    
     def _expand_rule(self, text: str, depth: int = 0, max_depth: int = 50) -> str:
         """
         Recursively expand non-terminal symbols in text until only terminals remain.
@@ -62,6 +163,9 @@ class TechnobabbleGenerator:
         """
         if depth > max_depth:
             return text
+        
+        # First, resolve any DSL expressions (they might generate angle bracket symbols)
+        text = self._resolve_dsl(text)
         
         # Find all non-terminals in angle brackets
         pattern = r'<([^>]+)>'
@@ -169,11 +273,43 @@ class TechnobabbleGenerator:
         
         return post.strip()
     
+    def generate_post(self, apply_mutations: bool = False) -> str:
+        """
+        Generate a complete post using the new POST hierarchical structure.
+        
+        This uses the new category system with TYPE, INTRO, TECH_CHAIN, 
+        EVIDENCE, CONSEQUENCE, COMMENT, and OUTRO.
+        
+        Args:
+            apply_mutations: Whether to apply sentence mutations
+            
+        Returns:
+            Generated post
+        """
+        # Start with the POST rule
+        post = "<POST>"
+        
+        # Recursively expand until only terminals remain
+        post = self._expand_rule(post)
+        
+        # Apply mutations if enabled
+        if apply_mutations:
+            lines = post.split('\n')
+            mutated_lines = []
+            for line in lines:
+                if line.strip() and not line.strip().startswith(('🚨', '⚠️', '🔴', '```')):
+                    line = self._apply_mutations(line)
+                mutated_lines.append(line)
+            post = '\n'.join(mutated_lines)
+        
+        return post.strip()
+    
     def generate(self, 
                  num_sentences: int = None,
                  theme: Optional[str] = None,
                  apply_mutations: bool = True,
-                 use_format: bool = False) -> str:
+                 use_format: bool = False,
+                 use_post: bool = False) -> str:
         """
         Generate technobabble text.
         
@@ -182,10 +318,14 @@ class TechnobabbleGenerator:
             theme: Optional theme mode (currently unused, for future expansion)
             apply_mutations: Whether to apply sentence mutations
             use_format: Whether to use format templates instead of plain sentences
+            use_post: Whether to use the new POST hierarchical structure
             
         Returns:
             Generated technobabble text
         """
+        if use_post:
+            return self.generate_post(apply_mutations)
+        
         if use_format:
             return self.generate_format(apply_mutations)
         
@@ -272,6 +412,11 @@ def main():
         action='store_true',
         help='Use format templates (threads, tutorials, reports, etc.)'
     )
+    parser.add_argument(
+        '-p', '--post',
+        action='store_true',
+        help='Use new POST hierarchical structure (with TYPE, INTRO, TECH_CHAIN, etc.)'
+    )
     
     args = parser.parse_args()
     
@@ -285,7 +430,8 @@ def main():
             num_sentences=args.num_sentences,
             theme=args.theme,
             apply_mutations=not args.no_mutations,
-            use_format=args.format
+            use_format=args.format,
+            use_post=args.post
         )
         
         print(output)
