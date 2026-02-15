@@ -118,7 +118,7 @@ class TechnobabbleGenerator:
             # Category call: {C CATEGORY} or {C2 CATEGORY}
             elif expr.startswith('C'):
                 # Check if it's multi-pick from category like {C2 ACTION}
-                if expr[1:2].isdigit():
+                if len(expr) > 1 and expr[1].isdigit():
                     try:
                         count = int(expr[1])
                         category = expr[2:].strip()
@@ -141,11 +141,16 @@ class TechnobabbleGenerator:
         
         # Keep resolving until no more expressions (for nested expressions)
         max_iterations = 20
-        for _ in range(max_iterations):
+        iteration_count = 0
+        for iteration_count in range(max_iterations):
             new_text = re.sub(pattern, resolve_expression, text)
             if new_text == text:
                 break
             text = new_text
+        else:
+            # Max iterations reached - could indicate malformed nested expressions
+            # This is typically not an error, just means we've reached the depth limit
+            pass
         
         return text
     
