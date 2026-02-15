@@ -1160,7 +1160,6 @@ security_action:
   - [1, "sandbox"]
   - [1, "containerize"]
   - [1, "virtualize"]
-  - [1, "encrypt"]
   - [1, "obfuscate"]
   - [1, "minify"]
   - [1, "compile"]
