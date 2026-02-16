@@ -115,6 +115,18 @@ The generator supports a custom DSL for dynamic content generation:
 {R 100-999}  → Generates random integer between 100 and 999
 ```
 
+**Random Range with Seed Multiplier (for consistent values):**
+```
+{R 100-999 SEED:systems}  → Generates the same value every time with this seed multiplier
+{R 100-999 SEED:users}    → Different seed multiplier = different consistent value
+```
+
+**Variable Storage and Retrieval:**
+```
+{VAR:cve CVE-2021-{R 1000-9999}}  → Stores generated CVE in variable 'cve'
+{VAR:cve}                          → Retrieves the same CVE value
+```
+
 **OR Choice:**
 ```
 {O android|linux|qnx}  → Randomly selects one option
@@ -141,11 +153,20 @@ The generator supports a custom DSL for dynamic content generation:
 CVE-{R 2018-2026}-{R 1000-99999}  → CVE-2021-54832
 ```
 
+**Variable Consistency Example:**
+```
+Found {VAR:count {R 100-500}} systems. Exploited {VAR:count} systems total.
+→ "Found 327 systems. Exploited 327 systems total."
+```
+
 The DSL resolver:
-- Evaluates inner braces first
+- Evaluates inner braces first with proper nesting support
 - Ensures uniqueness in multi-pick operations
-- Supports up to 20 levels of nesting
+- Supports unlimited levels of nesting
 - Categories are resolved via weighted random selection
+- Variables maintain consistency across the entire post
+- Seed multipliers ensure reproducible "random" values
+- **Sentences never repeat** within a single generation
 
 ### Python API
 

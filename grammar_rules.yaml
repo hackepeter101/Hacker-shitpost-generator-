@@ -14,6 +14,7 @@ thread_format:
   - [1, "🧵 Thread on <target_system> vulnerability:\n\n1/ <exploit_statement>\n\n2/ <technical_statement>\n\n3/ <security_advice>\n\nThat's it. Stay safe out there 🔒"]
   - [1, "THREAD TIME 🧵\n\n<discovery_statement>\n\n<technical_statement>\n\n<warning_statement>\n\nDrop a follow if you learned something! 💯"]
   - [1, "Let me explain what I found (Thread):\n\n<exploit_statement>\n\n<technical_statement>\n\n<security_advice>\n\nRetweet to spread awareness! 🚨"]
+  - [1, "🧵 Breaking: {VAR:cve CVE-{R 2020-2026}-{R 10000-99999}}\n\nFound {VAR:count {R 50-500 SEED:systems}} vulnerable systems running <target_system>.\n\n<exploit_statement>\n\nAll {VAR:count} systems are at risk. Patch immediately!\n\nCVSS Score: <cvss_score> ({VAR:cve})"]
 
 tutorial_format:
   - [1, "📚 TUTORIAL: How to <attack_goal>\n\n<instruction_step>\n\n<instruction_step>\n\n<instruction_step>\n\nEasy right? Subscribe for more! 🔥"]
@@ -24,11 +25,13 @@ discovery_format:
   - [1, "🚨 URGENT DISCOVERY 🚨\n\n<discovery_statement>\n\n<technical_statement>\n\n<security_advice>\n\nThis is HUGE! RT to save lives! 🔥"]
   - [1, "Just found something crazy...\n\n<discovery_statement>\n\n<technical_statement>\n\nNobody else knows about this yet 🤫"]
   - [1, "OMG GUYS:\n\n<discovery_statement>\n\n<exploit_statement>\n\nThis is literally <random:10-100>x worse than Log4j 💀"]
+  - [1, "🚨 BREAKING 🚨\n\nDiscovered {VAR:vuln <vulnerability_type>} in <target_system>.\n\nImpact: {VAR:systems {R 1000-50000 SEED:impact}} systems compromised\nData leaked: {VAR:records {R 100-999 SEED:data}}K records\n\nThis {VAR:vuln} affects version <version_context>.\n\nTotal damage: {VAR:systems} systems, {VAR:records}K records exposed.\n\nPatch NOW! 🔥"]
 
 exploit_report_format:
   - [1, "⚠️ VULNERABILITY REPORT ⚠️\n\nTarget: <target_system>\nSeverity: <severity>\nCVSS: <cvss_score>\n\n<exploit_statement>\n\n<technical_statement>\n\n<security_advice>\n\nPatch ASAP! ⚡"]
   - [1, "🔴 CRITICAL ALERT 🔴\n\n<exploit_statement>\n\n<technical_statement>\n\nAffected: <random:1000-1000000>+ systems\nExploited: Yes\n\nThis is bad folks 😱"]
   - [1, "New <vulnerability_type> found!\n\n<exploit_statement>\n\n<technical_statement>\n\nCVE pending... but this is getting <random:10-100>k retweets for sure 📈"]
+  - [1, "📊 EXPLOIT ANALYSIS\n\nID: {VAR:exploit_id EXP-{R 2024-2026}-{R 1000-9999}}\nTarget: <target_system>\n\nInitial access: {VAR:entry {R 1-24 SEED:entry}} hours\nLateral movement: {VAR:lateral {R 1-12 SEED:lateral}} hours  \nData exfil: {VAR:exfil {R 1-6 SEED:exfil}} hours\n\nTotal time to compromise: {VAR:entry}h + {VAR:lateral}h + {VAR:exfil}h = <random:5-40>h\n\nExploit chain: <attack_method> → <attack_vector> → <attack_goal>\n\nReport: {VAR:exploit_id} 📋"]
 
 boast_format:
   - [1, "Another day, another W 😤\n\n<achievement_statement>\n\n<metric_statement>\n\n<skill_statement> Built different 💪🔥"]

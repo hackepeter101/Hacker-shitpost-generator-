@@ -164,6 +164,64 @@ class TestTechnobabbleGenerator(unittest.TestCase):
         self.assertNotIn('{C severity}', result)
         self.assertIn('Severity:', result)
     
+    def test_variable_storage_and_retrieval(self):
+        """Test DSL variable storage and retrieval."""
+        gen = TechnobabbleGenerator(seed=42)
+        # Store and retrieve a simple value
+        result = gen._resolve_dsl("ID: {VAR:id 12345}. Same ID: {VAR:id}")
+        self.assertNotIn('{VAR', result)
+        self.assertEqual(result, "ID: 12345. Same ID: 12345")
+    
+    def test_variable_with_nested_expression(self):
+        """Test variable storage with nested random expressions."""
+        gen = TechnobabbleGenerator(seed=42)
+        # Store a value that contains a random expression
+        result = gen._resolve_dsl("CVE: {VAR:cve CVE-2021-{R 1000-9999}}. Reference: {VAR:cve}")
+        self.assertNotIn('{VAR', result)
+        self.assertNotIn('{R', result)
+        # Extract the CVE numbers - they should be the same
+        parts = result.split('. ')
+        cve1 = parts[0].split(': ')[1]
+        cve2 = parts[1].split(': ')[1]
+        self.assertEqual(cve1, cve2)
+        self.assertTrue(cve1.startswith('CVE-2021-'))
+    
+    def test_seed_multiplier(self):
+        """Test seed multipliers for consistent random values."""
+        gen = TechnobabbleGenerator(seed=42)
+        # Same seed multiplier should give same value
+        result = gen._resolve_dsl("Count: {R 100-200 SEED:systems}. Again: {R 100-200 SEED:systems}.")
+        self.assertNotIn('{R', result)
+        # Extract the numbers - they should be the same
+        import re
+        numbers = re.findall(r'\d+', result.replace('100-200', ''))
+        self.assertEqual(len(numbers), 2)
+        self.assertEqual(numbers[0], numbers[1])
+    
+    def test_no_duplicate_sentences(self):
+        """Test that sentences are not duplicated within a single generation."""
+        gen = TechnobabbleGenerator(seed=42)
+        output = gen.generate(num_sentences=20, apply_mutations=False)
+        sentences = [s.strip().lower() + '.' for s in output.split('. ') if s.strip()]
+        # All sentences should be unique
+        unique_sentences = set(sentences)
+        self.assertEqual(len(sentences), len(unique_sentences))
+    
+    def test_reset_generation_state(self):
+        """Test that generation state is reset between generations."""
+        gen = TechnobabbleGenerator(seed=42)
+        # Generate once and store some variables
+        gen.variables['test'] = 'value1'
+        gen.seed_multipliers['mult1'] = '100'
+        gen.used_sentences.add('test sentence')
+        
+        # Generate again - state should be reset
+        gen.generate(num_sentences=3)
+        # Variables and multipliers should be cleared
+        self.assertEqual(len(gen.variables), 0)
+        self.assertEqual(len(gen.seed_multipliers), 0)
+        self.assertEqual(len(gen.used_sentences), 3)  # Should have new sentences
+    
     def test_new_categories_exist(self):
         """Test that new hierarchical categories are loaded."""
         self.assertIn('POST', self.generator.grammar)
