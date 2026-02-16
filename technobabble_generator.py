@@ -25,7 +25,10 @@ class TechnobabbleGenerator:
         """
         self.grammar = self._load_grammar(grammar_file)
         self.context = {}  # Context memory for OS, Vendor, Version, etc.
+        self.variables = {}  # Variable storage for consistency (e.g., {VAR:name})
+        self.used_sentences = set()  # Track used sentences to avoid repetition
         self.seed = seed
+        self.seed_multipliers = {}  # Store seed multipliers for sub-generators
         if seed is not None:
             random.seed(seed)
     
@@ -53,11 +56,14 @@ class TechnobabbleGenerator:
         Resolve custom DSL expressions in text.
         Supports:
         - {R min-max} - Random range
+        - {R min-max SEED:mult} - Random range with seed multiplier
         - {O opt1|opt2|opt3} - OR choice
         - {M2 item1|item2|item3} - Multi-pick (2 unique items)
         - {W item1:weight1|item2:weight2} - Weighted choice
         - {C CATEGORY} - Category call
         - {C2 CATEGORY} - Multi-pick from category
+        - {VAR:name value} - Store value in variable 'name'
+        - {VAR:name} - Retrieve stored variable 'name'
         
         Args:
             text: Text containing DSL expressions in curly braces
@@ -65,20 +71,76 @@ class TechnobabbleGenerator:
         Returns:
             Text with DSL expressions resolved
         """
-        # Pattern to match {COMMAND ...}
-        pattern = r'\{([^}]+)\}'
         
-        def resolve_expression(match):
-            expr = match.group(1).strip()
+        def find_matching_brace(text, start_pos):
+            """Find the matching closing brace for an opening brace at start_pos."""
+            if text[start_pos] != '{':
+                return -1
             
-            # Random range: {R 100-999}
+            depth = 0
+            for i in range(start_pos, len(text)):
+                if text[i] == '{':
+                    depth += 1
+                elif text[i] == '}':
+                    depth -= 1
+                    if depth == 0:
+                        return i
+            return -1
+        
+        def resolve_expression(expr):
+            """Resolve a single DSL expression."""
+            expr = expr.strip()
+            
+            # Variable storage: {VAR:name value} or {VAR:name}
+            if expr.startswith('VAR:'):
+                parts = expr[4:].strip().split(None, 1)
+                var_name = parts[0]
+                if len(parts) > 1:
+                    # Store value and resolve it: {VAR:cve CVE-2021-{R 1000-9999}}
+                    value = parts[1]
+                    # Check if this variable is already stored (to avoid re-resolving)
+                    if var_name not in self.variables:
+                        # Resolve any nested expressions in the value
+                        resolved_value = self._resolve_dsl(value)
+                        self.variables[var_name] = resolved_value
+                        return resolved_value
+                    else:
+                        # Variable already exists, return its stored value
+                        return self.variables[var_name]
+                else:
+                    # Retrieve value: {VAR:cve}
+                    if var_name in self.variables:
+                        return self.variables[var_name]
+                    return '{' + expr + '}'
+            
+            # Random range: {R 100-999} or {R 100-999 SEED:mult}
             if expr.startswith('R '):
                 range_part = expr[2:].strip()
                 try:
+                    # Check if there's a seed multiplier
+                    seed_mult = None
+                    if 'SEED:' in range_part:
+                        parts = range_part.split('SEED:')
+                        range_part = parts[0].strip()
+                        seed_mult = parts[1].strip()
+                    
                     start, end = map(int, range_part.split('-'))
-                    return str(random.randint(start, end))
+                    
+                    # If seed multiplier is provided, use it to create a sub-generator
+                    if seed_mult and self.seed is not None:
+                        # Create a unique seed based on base seed and multiplier
+                        sub_seed = self.seed * int(seed_mult) if seed_mult.isdigit() else hash(self.seed + hash(seed_mult))
+                        # Store or retrieve the value for this seed multiplier
+                        if seed_mult not in self.seed_multipliers:
+                            temp_state = random.getstate()
+                            random.seed(sub_seed)
+                            self.seed_multipliers[seed_mult] = str(random.randint(start, end))
+                            random.setstate(temp_state)
+                        return self.seed_multipliers[seed_mult]
+                    else:
+                        return str(random.randint(start, end))
                 except (ValueError, IndexError):
-                    return match.group(0)  # Return original if invalid
+                    return '{' + expr + '}'  # Return original if invalid
             
             # OR choice: {O opt1|opt2|opt3}
             elif expr.startswith('O '):
@@ -99,7 +161,7 @@ class TechnobabbleGenerator:
                     selected = random.sample(items, count)
                     return ' '.join(selected)
                 except (ValueError, IndexError):
-                    return match.group(0)
+                    return '{' + expr + '}'
             
             # Weighted choice: {W item1:weight1|item2:weight2}
             elif expr.startswith('W '):
@@ -113,7 +175,7 @@ class TechnobabbleGenerator:
                         weights.append(float(weight))
                     return random.choices(items, weights=weights, k=1)[0]
                 except (ValueError, IndexError):
-                    return match.group(0)
+                    return '{' + expr + '}'
             
             # Category call: {C CATEGORY} or {C2 CATEGORY}
             elif expr.startswith('C'):
@@ -130,29 +192,47 @@ class TechnobabbleGenerator:
                             selected = random.sample(options, count)
                             return ' '.join(selected)
                     except (ValueError, IndexError):
-                        return match.group(0)
+                        return '{' + expr + '}'
                 else:
                     # Simple category call {C CATEGORY}
                     category = expr[1:].strip()
                     if category in self.grammar:
                         return self._weighted_choice(self.grammar[category])
             
-            return match.group(0)  # Return original if not matched
+            return '{' + expr + '}'  # Return original if not matched
         
-        # Keep resolving until no more expressions (for nested expressions)
-        max_iterations = 20
-        iteration_count = 0
-        for iteration_count in range(max_iterations):
-            new_text = re.sub(pattern, resolve_expression, text)
-            if new_text == text:
-                break
-            text = new_text
-        else:
-            # Max iterations reached - could indicate malformed nested expressions
-            # This is typically not an error, just means we've reached the depth limit
-            pass
+        # Process text using brace matching
+        result = []
+        i = 0
+        max_iterations = 50
+        iterations = 0
         
-        return text
+        while i < len(text) and iterations < max_iterations:
+            if text[i] == '{':
+                # Find matching closing brace
+                close_pos = find_matching_brace(text, i)
+                if close_pos != -1:
+                    # Extract and resolve the expression
+                    expr = text[i+1:close_pos]
+                    resolved = resolve_expression(expr)
+                    result.append(resolved)
+                    i = close_pos + 1
+                else:
+                    # No matching brace, treat as literal
+                    result.append(text[i])
+                    i += 1
+            else:
+                result.append(text[i])
+                i += 1
+        
+        # Join and check if we need another iteration (for nested expressions)
+        new_text = ''.join(result)
+        if new_text != text and '{' in new_text:
+            iterations += 1
+            if iterations < max_iterations:
+                return self._resolve_dsl(new_text)
+        
+        return new_text
     
     def _expand_rule(self, text: str, depth: int = 0, max_depth: int = 50) -> str:
         """
@@ -328,6 +408,9 @@ class TechnobabbleGenerator:
         Returns:
             Generated technobabble text
         """
+        # Reset state for each generation to avoid carryover
+        self.reset_generation_state()
+        
         if use_post:
             return self.generate_post(apply_mutations)
         
@@ -337,9 +420,16 @@ class TechnobabbleGenerator:
         if num_sentences is None:
             num_sentences = random.randint(4, 10)
         
-        sentences = []
+        # Reset sentence tracking for this generation
+        self.used_sentences = set()
         
-        for _ in range(num_sentences):
+        sentences = []
+        max_attempts = num_sentences * 10  # Limit attempts to avoid infinite loops
+        attempts = 0
+        
+        while len(sentences) < num_sentences and attempts < max_attempts:
+            attempts += 1
+            
             # Clear context for each new sentence group (but keep some continuity)
             if random.random() < 0.3:
                 self.context = {}
@@ -350,10 +440,6 @@ class TechnobabbleGenerator:
             # Recursively expand until only terminals remain
             sentence = self._expand_rule(sentence)
             
-            # Apply mutations if enabled
-            if apply_mutations:
-                sentence = self._apply_mutations(sentence)
-            
             # Clean up any remaining artifacts
             sentence = sentence.strip()
             
@@ -361,7 +447,16 @@ class TechnobabbleGenerator:
             if sentence and not sentence.endswith('.'):
                 sentence += '.'
             
-            sentences.append(sentence)
+            # Check if this sentence is unique (before mutations)
+            sentence_normalized = sentence.lower().strip()
+            if sentence_normalized not in self.used_sentences and sentence:
+                self.used_sentences.add(sentence_normalized)
+                
+                # Apply mutations if enabled
+                if apply_mutations:
+                    sentence = self._apply_mutations(sentence)
+                
+                sentences.append(sentence)
         
         return ' '.join(sentences)
     
@@ -369,10 +464,20 @@ class TechnobabbleGenerator:
         """Set random seed for reproducibility."""
         self.seed = seed
         random.seed(seed)
+        # Reset state-dependent attributes
+        self.variables = {}
+        self.seed_multipliers = {}
+        self.used_sentences = set()
     
     def get_context(self) -> Dict[str, str]:
         """Get current context memory."""
         return self.context.copy()
+    
+    def reset_generation_state(self):
+        """Reset generation state for a fresh generation."""
+        self.variables = {}
+        self.seed_multipliers = {}
+        self.used_sentences = set()
 
 
 def main():
