@@ -133,7 +133,9 @@ class TechnobabbleGenerator:
                     # If seed multiplier is provided, use it to create a sub-generator
                     if seed_mult and self.seed is not None:
                         # Create a unique seed based on base seed and multiplier
-                        sub_seed = self.seed * int(seed_mult) if seed_mult.isdigit() else hash((self.seed, seed_mult))
+                        # Always use hash for consistency regardless of multiplier type
+                        mult_value = int(seed_mult) if seed_mult.isdigit() else seed_mult
+                        sub_seed = hash((self.seed, mult_value))
                         # Store or retrieve the value for this seed multiplier
                         if seed_mult not in self.seed_multipliers:
                             temp_state = random.getstate()

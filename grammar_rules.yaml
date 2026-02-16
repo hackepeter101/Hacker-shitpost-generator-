@@ -31,7 +31,7 @@ exploit_report_format:
   - [1, "⚠️ VULNERABILITY REPORT ⚠️\n\nTarget: <target_system>\nSeverity: <severity>\nCVSS: <cvss_score>\n\n<exploit_statement>\n\n<technical_statement>\n\n<security_advice>\n\nPatch ASAP! ⚡"]
   - [1, "🔴 CRITICAL ALERT 🔴\n\n<exploit_statement>\n\n<technical_statement>\n\nAffected: <random:1000-1000000>+ systems\nExploited: Yes\n\nThis is bad folks 😱"]
   - [1, "New <vulnerability_type> found!\n\n<exploit_statement>\n\n<technical_statement>\n\nCVE pending... but this is getting <random:10-100>k retweets for sure 📈"]
-  - [1, "📊 EXPLOIT ANALYSIS\n\nID: {VAR:exploit_id EXP-{R 2024-2026}-{R 1000-9999}}\nTarget: <target_system>\n\nInitial access: {VAR:entry {R 1-24 SEED:entry}} hours\nLateral movement: {VAR:lateral {R 1-12 SEED:lateral}} hours  \nData exfil: {VAR:exfil {R 1-6 SEED:exfil}} hours\n\nTotal time to compromise: {VAR:entry}h + {VAR:lateral}h + {VAR:exfil}h = <random:5-40>h\n\nExploit chain: <attack_method> → <attack_vector> → <attack_goal>\n\nReport: {VAR:exploit_id} 📋"]
+  - [1, "📊 EXPLOIT ANALYSIS\n\nID: {VAR:exploit_id EXP-{R 2024-2026}-{R 1000-9999}}\nTarget: <target_system>\n\nPhase 1 - Initial access: {VAR:entry {R 1-24 SEED:entry}} hours\nPhase 2 - Lateral movement: {VAR:lateral {R 1-12 SEED:lateral}} hours  \nPhase 3 - Data exfil: {VAR:exfil {R 1-6 SEED:exfil}} hours\n\nTimeline breakdown:\nEntry: {VAR:entry}h → Lateral: {VAR:lateral}h → Exfil: {VAR:exfil}h\n\nExploit chain: <attack_method> → <attack_vector> → <attack_goal>\n\nReport: {VAR:exploit_id} 📋"]
 
 boast_format:
   - [1, "Another day, another W 😤\n\n<achievement_statement>\n\n<metric_statement>\n\n<skill_statement> Built different 💪🔥"]
