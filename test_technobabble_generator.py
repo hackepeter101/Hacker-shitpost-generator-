@@ -192,11 +192,17 @@ class TestTechnobabbleGenerator(unittest.TestCase):
         # Same seed multiplier should give same value
         result = gen._resolve_dsl("Count: {R 100-200 SEED:systems}. Again: {R 100-200 SEED:systems}.")
         self.assertNotIn('{R', result)
-        # Extract the numbers - they should be the same
+        # Extract the numbers from "Count: X. Again: Y." format
+        # Split by common words and extract numbers
+        parts = result.split('.')
+        count_part = parts[0]  # "Count: X"
+        again_part = parts[1]  # " Again: Y"
         import re
-        numbers = re.findall(r'\d+', result.replace('100-200', ''))
-        self.assertEqual(len(numbers), 2)
-        self.assertEqual(numbers[0], numbers[1])
+        count_num = re.search(r'Count:\s*(\d+)', count_part)
+        again_num = re.search(r'Again:\s*(\d+)', again_part)
+        self.assertIsNotNone(count_num)
+        self.assertIsNotNone(again_num)
+        self.assertEqual(count_num.group(1), again_num.group(1))
     
     def test_no_duplicate_sentences(self):
         """Test that sentences are not duplicated within a single generation."""

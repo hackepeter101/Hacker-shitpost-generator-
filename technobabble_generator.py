@@ -15,6 +15,10 @@ class TechnobabbleGenerator:
     A rule-based text generator using recursive grammar rules with weighted random selection.
     """
     
+    # Configuration constants
+    MAX_DSL_ITERATIONS = 50  # Maximum iterations for DSL resolution
+    MAX_ATTEMPTS_MULTIPLIER = 10  # Multiplier for max attempts in sentence generation
+    
     def __init__(self, grammar_file: str = "grammar_rules.yaml", seed: Optional[int] = None):
         """
         Initialize the generator with grammar rules.
@@ -129,7 +133,7 @@ class TechnobabbleGenerator:
                     # If seed multiplier is provided, use it to create a sub-generator
                     if seed_mult and self.seed is not None:
                         # Create a unique seed based on base seed and multiplier
-                        sub_seed = self.seed * int(seed_mult) if seed_mult.isdigit() else hash(self.seed + hash(seed_mult))
+                        sub_seed = self.seed * int(seed_mult) if seed_mult.isdigit() else hash((self.seed, seed_mult))
                         # Store or retrieve the value for this seed multiplier
                         if seed_mult not in self.seed_multipliers:
                             temp_state = random.getstate()
@@ -204,7 +208,7 @@ class TechnobabbleGenerator:
         # Process text using brace matching
         result = []
         i = 0
-        max_iterations = 50
+        max_iterations = self.MAX_DSL_ITERATIONS
         iterations = 0
         
         while i < len(text) and iterations < max_iterations:
@@ -424,7 +428,7 @@ class TechnobabbleGenerator:
         self.used_sentences = set()
         
         sentences = []
-        max_attempts = num_sentences * 10  # Limit attempts to avoid infinite loops
+        max_attempts = num_sentences * self.MAX_ATTEMPTS_MULTIPLIER  # Limit attempts to avoid infinite loops
         attempts = 0
         
         while len(sentences) < num_sentences and attempts < max_attempts:
